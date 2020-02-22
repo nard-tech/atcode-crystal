@@ -1,18 +1,9 @@
-#   ABC 085
+# ABC 085 C - Otoshidama
+# https://atcoder.jp/contests/abc085/tasks/abc085_c
 
-##  B - Kagami Mochi
+# cf. [AtCoder に登録したら解くべき精選過去問 10 問を Crystal で解いてみた](https://qiita.com/tomerun/items/23ce2a2ed6ead291d222)
+# 第8問
 
-*   配列の初期化
-
-```crystal
-Array(Int64).new(n) { read_line.to_i64 }
-```
-
-##  C - Otoshidama
-
-*   大域脱出 (cf. c2.cr)
-
-```crystal
 n, y = read_line.split.map(&.to_i64)
 
 0.upto(n) do |i| # 10000円札
@@ -21,10 +12,9 @@ n, y = read_line.split.map(&.to_i64)
     price = 10000 * i + 5000 * j + 1000 * k
     if price == y
       puts "#{i} #{j} #{k}"
-      break
+      exit
     end
   end
 end
 
 puts "-1 -1 -1"
-```
