@@ -5,8 +5,28 @@ n, m = read_line.split.map(&.to_i64)
 a = read_line.split.map(&.to_i64)
 bn_and_cn = Array.new(m) { read_line.split.map(&.to_i64) }
 
+def selection_sort(a)
+  last_index = a.size - 1
+
+  0.upto(last_index) do |i|
+    min = a[i]
+    min_index = i
+
+    (i + 1).upto(last_index) do |j|
+      if a[j] < min
+        min = a[j]
+        min_index = j
+      end
+    end
+
+    a[i], a[min_index] = min , a[i]
+  end
+
+  a
+end
+
 def replace(a, b, c)
-  a = a.sort
+  a = selection_sort(a)
 
   0.upto(b - 1) do |i|
     if a[i] < c

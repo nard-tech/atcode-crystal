@@ -1,3 +1,4 @@
+# メモリ消費量が少ない (33404 KB)
 def selection_sort(a)
   last_index = a.size - 1
 
