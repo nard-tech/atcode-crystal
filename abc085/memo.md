@@ -2,6 +2,8 @@
 
 ##  B - Kagami Mochi
 
+AC
+
 *   配列の初期化
 
 ```crystal
@@ -10,21 +12,8 @@ Array(Int64).new(n) { read_line.to_i64 }
 
 ##  C - Otoshidama
 
-*   大域脱出 (cf. c2.cr)
+AC
 
-```crystal
-n, y = read_line.split.map(&.to_i64)
-
-0.upto(n) do |i| # 10000円札
-  0.upto(n - i) do |j| # 5000円札
-    k = n - i - j # 1000円札
-    price = 10000 * i + 5000 * j + 1000 * k
-    if price == y
-      puts "#{i} #{j} #{k}"
-      break
-    end
-  end
-end
-
-puts "-1 -1 -1"
-```
+*   大域脱出 (cf. `c2.cr`)
+    *   `exit` を `break` とすると WA となる
+*   `c2.cr` の方が `c1.cr` よりもパフォーマンスがよい
