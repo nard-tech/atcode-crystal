@@ -5,15 +5,21 @@ n, m = read_line.split.map(&.to_i64)
 a = read_line.split.map(&.to_i64)
 bn_and_cn = Array.new(m) { read_line.split.map(&.to_i64) }
 
-bn_and_cn.each do |b_and_c|
+def replace(a, b, c)
   a = a.sort
-  b, c = b_and_c
 
   0.upto(b - 1) do |i|
     if a[i] < c
       a[i] = c
     end
   end
+
+  a
+end
+
+bn_and_cn.each do |b_and_c|
+  b, c = b_and_c
+  a = replace(a, b, c)
 end
 
 sum = a.reduce { |acc, i| acc + i }
