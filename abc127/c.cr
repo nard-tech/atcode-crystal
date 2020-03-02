@@ -2,35 +2,13 @@
 # https://atcoder.jp/contests/abc127/tasks/abc127_c
 
 n, m = read_line.split.map(&.to_i64)
-lrs = Array.new(m) { read_line.split.map(&.to_i64) }
+l, r = Array.new(m) { read_line.split.map(&.to_i64) }.transpose
 
-class Card
-  def initialize(index : Int32)
-    @index = index
-  end
+l_max = l.max
+r_min = r.min
 
-  getter :index
+if l_max <= r_min
+  puts r_min - l_max + 1
+else
+  puts 0
 end
-
-class Gate
-  def initialize(index : Int32, l : Int64, r : Int64)
-    @index = index
-    @l = l
-    @r = r
-  end
-
-  getter :l , :r
-
-  def pass?(card : Card)
-    l <= card.index && card.index <= r
-  end
-end
-
-cards = 1.upto(n).map { |i| Card.new(i) }
-gates = lrs.map_with_index { |lr, i|
-  l, r = lr
-  Gate.new(i + 1, l, r)
-}
-
-# puts cards.select { |card| gates.all? { |gate| gate.pass?(card) } }.size
-
