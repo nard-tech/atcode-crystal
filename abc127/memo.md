@@ -6,14 +6,20 @@
 
 ##  A - Ferris Wheel
 
+AC
+
 基本問題．
 `77aacd3` を base に，`23fb2b4`, `b1e5d5e` で修正．
 
 ##  B - Algae
 
+AC
+
 基本問題．
 
 ##  C - Prison
+
+TLE -> AC
 
 愚直にやろうとすると (cf. `77aacd3`, `898fdbf`, `4a84d8e`) 計算量が多く TLE となってしまう．
 メモリの消費量も多い．
@@ -22,13 +28,17 @@
 
 ##  D - Integer Cards
 
+TLE
+
+**要研究**
+
 quick sort, selection sort を試すが TLE となりうまくいかなかった．
-要研究．
+
 
 ##  E - Cell Distance
 
-未着手．
+**未着手**
 
 ##  F - Absolute Minima
 
-未着手．
+**未着手**
