@@ -2,7 +2,7 @@
 
 ##  B - Card Game for Two
 
-RE
+RE -> AC
 
 *   配列の生成
 

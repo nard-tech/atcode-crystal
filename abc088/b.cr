@@ -11,9 +11,14 @@ alice_cards = [] of Int64
 bob_cards = [] of Int64
 
 array.sort.reverse.each_slice(2) do |ary|
-  a, b = ary.map(&.to_i64)
-  alice_cards.push a
-  bob_cards.push b
+  if ary.size == 1
+    a = ary[0]
+    alice_cards.push a
+  else
+    a, b = ary.map(&.to_i64)
+    alice_cards.push a
+    bob_cards.push b
+  end
 end
 
 puts alice_cards.sum - bob_cards.sum
