@@ -18,7 +18,7 @@ AC
 
 ##  C - Guess The Number
 
-AC
+RE, WA -> AC
 
 *   「0は1桁の整数とする」に注意
     *   `numbers = (10 ** (n-1)).upto(10 ** n - 1).to_a` ではなく，`n > 1 ? (10 ** (n-1)).upto(10 ** n - 1).to_a : 0.upto(9).to_a` とする．
@@ -29,12 +29,16 @@ AC
 
 ##  E - Simple String Queries
 
-**TLE**
+TLE
+
+**要研究**
 
 *   愚直にコードに書き起こすと TLE となる．
 
 ##  F - Yakiniku Optimization Problem
 
-**WA**，**要研究**
+WA
+
+**要研究**
 
 *   数学的に考察
