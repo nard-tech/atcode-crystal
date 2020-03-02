@@ -19,7 +19,7 @@ class Cell
     @selected
   end
 
-  def selected=(var)
+  private def selected=(var)
     @selected = var
   end
 end
