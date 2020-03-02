@@ -25,8 +25,16 @@ def selection_sort(a)
   a
 end
 
+def quick_sort(a)
+  return a if a.size <= 1
+  base = a.pop
+  smaller, bigger = a.partition { |e| e < base }
+  a.push(base)
+  quick_sort(smaller) + [base] + quick_sort(bigger)
+end
+
 def replace(a, b, c)
-  a = selection_sort(a)
+  a = quick_sort(a)
 
   0.upto(b - 1) do |i|
     if a[i] < c
