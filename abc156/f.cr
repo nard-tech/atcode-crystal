@@ -33,5 +33,3 @@ nxm_s.each_with_index do |nxm, i|
 
   puts i
 end
-
-
