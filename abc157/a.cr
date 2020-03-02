@@ -4,5 +4,5 @@
 # for Crystal 0.20.5
 
 n = read_line.to_i64
-n_papers = n.even? ? n / 2 : n / 2 + 1
+n_papers = (n / 2.0).ceil.to_i
 puts n_papers
