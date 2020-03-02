@@ -2,7 +2,7 @@
 
 ##  B - Card Game for Two
 
-https://atcoder.jp/contests/abc088/tasks/abc088_b
+RE
 
 *   配列の生成
 
