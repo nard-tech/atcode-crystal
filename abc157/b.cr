@@ -9,6 +9,12 @@ class Cell
 
   getter :number
 
+  def select(numbers)
+    if numbers.includes?(number)
+      self.selected = true
+    end
+  end
+
   def selected?
     @selected
   end
@@ -22,13 +28,9 @@ a = Array.new(3) { read_line.split.map(&.to_i64) }.map { |row| row.map { |cell_n
 n = read_line.to_i64
 b_list = Array.new(n) { read_line.to_i64 }
 
-b_list.each do |b|
-  a.each do |row|
-    row.each do |cell|
-      if cell.number == b
-        cell.selected = true
-      end
-    end
+a.each do |row|
+  row.each do |cell|
+    cell.select(b_list)
   end
 end
 
