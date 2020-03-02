@@ -24,24 +24,37 @@ class Cell
   end
 end
 
+class Bingo
+  def initialize(rows : Array(Array(Cell)))
+    @rows = rows
+  end
+
+  getter :rows
+
+  def select(numbers)
+    rows.each do |row|
+      row.each do |cell|
+        cell.select(numbers)
+      end
+    end
+  end
+
+  def completed?
+    rows.any? { |row| row.all?(&.selected?) } ||
+      cols.any? { |col| col.all?(&.selected?) } ||
+      [rows[0][0], rows[1][1], rows[2][2]].all?(&.selected?) ||
+      [rows[0][2], rows[1][1], rows[2][0]].all?(&.selected?)
+  end
+
+  private def cols
+    rows.transpose
+  end
+end
+
 a = Array.new(3) { read_line.split.map(&.to_i64) }.map { |row| row.map { |cell_number| Cell.new(cell_number) }}
 n = read_line.to_i64
 b_list = Array.new(n) { read_line.to_i64 }
 
-a.each do |row|
-  row.each do |cell|
-    cell.select(b_list)
-  end
-end
-
-if a.any? { |row| row.all?(&.selected?) }
-  puts "Yes"
-elsif a.transpose.any? { |col| col.all?(&.selected?) }
-  puts "Yes"
-elsif [a[0][0], a[1][1], a[2][2]].all?(&.selected?)
-  puts "Yes"
-elsif [a[0][2], a[1][1], a[2][0]].all?(&.selected?)
-  puts "Yes"
-else
-  puts "No"
-end
+bingo = Bingo.new(a)
+bingo.select(b_list)
+puts (bingo.completed? ? "Yes" : "No")
