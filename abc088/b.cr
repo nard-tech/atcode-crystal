@@ -13,11 +13,11 @@ bob_cards = [] of Int64
 array.sort.reverse.each_slice(2) do |ary|
   if ary.size == 1
     a = ary[0]
-    alice_cards.push a
+    alice_cards.push(a)
   else
-    a, b = ary.map(&.to_i64)
-    alice_cards.push a
-    bob_cards.push b
+    a, b = ary
+    alice_cards.push(a)
+    bob_cards.push(b)
   end
 end
 
