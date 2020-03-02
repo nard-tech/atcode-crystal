@@ -5,7 +5,7 @@ age, price_base = read_line.split.map(&.to_i64)
 if age >= 13
   price = price_base
 elsif age >= 6
-  price, _ = price_base.divmod(2)
+  price = (price_base / 2).to_i64
 else
   price = 0
 end
