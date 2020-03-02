@@ -1,6 +1,12 @@
 #   ABC 081
 
+##  A - Placing Marbles
+
+AC
+
 ##  B - Shift only
+
+AC
 
 *   7行目
 

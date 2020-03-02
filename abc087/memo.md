@@ -2,7 +2,9 @@
 
 ##  B - Coins
 
-再帰は使えないか？ <!-- TODO -->
+AC
+
+*   再帰は使えないか？ <!-- TODO -->
 
 ```ruby
 def n_coins(x, a, b, c)
