@@ -4,6 +4,8 @@
 
 AC
 
+テーマ: Iterator，四則演算，if 文
+
 *   再帰は使えないか？ <!-- TODO -->
 
 ```ruby
