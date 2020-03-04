@@ -26,3 +26,13 @@ file_basenames.each do |file_basename|
     f.puts "# https://atcoder.jp/contests/#{dirname.downcase}/tasks/#{dirname.downcase}_#{file_basename.downcase}"
   end
 end
+
+File.open("#{dirname.downcase}/memo.md", "w") do |f|
+  f.puts "#   #{contest_info[:type]} #{contest_info[:number]}"
+  f.puts ""
+
+  file_basenames.each do |file_basename|
+    f.puts "##  #{file_basename.upcase}"
+    f.puts ""
+  end
+end
