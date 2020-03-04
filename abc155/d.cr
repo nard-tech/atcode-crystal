@@ -1,6 +1,8 @@
 # ABC 155 D - Pairs
 # https://atcoder.jp/contests/abc155/tasks/abc155_d
 
+# for Crystal 0.20.5
+
 n, k = read_line.split.map(&.to_i64)
 a = read_line.split.map(&.to_i64)
 
