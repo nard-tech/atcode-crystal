@@ -4,9 +4,15 @@
 
 AC
 
+テーマ: 文字列処理
+
+*   Crystal の `Char` 型
+
 ##  B - Shift only
 
 AC
+
+テーマ: while 文，四則演算，数値のメソッド (`Int#even?`)
 
 *   7行目
 

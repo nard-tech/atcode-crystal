@@ -6,6 +6,8 @@
 
 AC
 
+テーマ: 四則演算
+
 *   `/` 演算子の，Crystal の version による違いに注意
 *   `//` 演算子は Crystal 0.20.5 で動作しない
 *   `c9b44cb`, `52a8ff1` は Crystal 0.20.5 でも正常に動作する
@@ -14,11 +16,15 @@ AC
 
 AC
 
+テーマ: 配列の処理，クラスの作成
+
 *   Crystal では `#include?` ではなく `#includes?`
 
 ##  C - Guess The Number
 
 RE, WA -> AC
+
+テーマ: 条件の吟味，関数，
 
 *   「0は1桁の整数とする」に注意
     *   `numbers = (10 ** (n-1)).upto(10 ** n - 1).to_a` ではなく，`n > 1 ? (10 ** (n-1)).upto(10 ** n - 1).to_a : 0.upto(9).to_a` とする．
