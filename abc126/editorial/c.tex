@@ -1,0 +1,85 @@
+\documentclass[oneside,openright,9pt,a4paper,headings]{jsarticle}
+
+\usepackage[dvips]{graphicx}
+\usepackage[dvips]{graphicx,color}
+\usepackage{amsmath}
+\usepackage{makeidx}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{txfonts}
+\usepackage[scaled]{helvet}
+\usepackage{colortbl}
+\usepackage{enumerate}
+\usepackage{textcomp}
+\usepackage{ascmac}
+\usepackage{fancybox}
+\usepackage[utf8]{inputenc}
+\usepackage[version=3]{mhchem}
+
+\begin{document}
+\section{C - Dice and Coin}
+
+% https://atcoder.jp/contests/abc126/tasks/abc126_c
+
+サイコロを投げたとき，$i$が出たとする．
+
+$i$ が出る確率は $ \displaystyle \frac{1}{n} $ である．
+
+$ k \leq i \leq n $ のとき，コインを振る必要はないので，サイコロで $i$ が出たときに勝つ条件付き確率は $1$ である．
+
+$ 1 \leq i < k $ のとき，勝つためにコインを振って表を出さなければならない回数を $ t_{i} $ とする．
+$ t_{i} $回コインを振り続け，表が出続けたとすると，$ t_{i} $回コインを振ったときの得点 $ \mathrm{Point} (i) $ について，
+\begin{align}
+  \mathrm{Point} (i) &= i \cdot 2^{ t_{i} } \label{eq:point_1} \\
+  \mathrm{Point} (i - 1) & < k \leq \mathrm{Point} (i) \label{eq:point_2}
+\end{align}
+が成り立つ．
+
+\eqref{eq:point_1}, \eqref{eq:point_2} より，
+\begin{align}
+  i \cdot 2^{ t_{i} - 1 } & < k \leq i \cdot 2^{ t_{i} } \notag \\
+  2^{ t_{i} - 1 } & < \frac{k}{i} \leq 2^{ t_{i} } \notag \\
+  t_{i} - 1 & < \log_{2} \left( \frac{k}{i} \right) \leq t \notag
+\end{align}
+が成り立つ．
+
+ここで，天井関数 $ \lceil x \rceil $ を用いると，
+\begin{align}
+  t_{i}
+    &= \Biggl\lceil \log_{2} \left( \frac{k}{i} \right) \Biggr\rceil \notag \\
+    &= \lceil \log_{2} k - \log_{2} i \rceil
+\end{align}
+と表せる．
+
+以上より，サイコロを投げて $i$ が出た場合（最初の得点が $i$ の場合）のときに勝つ条件付き確率 $ p_{i} $ は，
+\begin{align}
+  p_{i} &= %
+  \begin{cases}
+    \qquad 1 & \qquad \text{ ( $ k \leq i \leq n $ ) } \\[6pt]
+    \qquad { \left( \frac{1}{2} \right) }^{ \lceil \log_{2} k - \log_{2} i \rceil } & \qquad \text{（上記以外）}
+  \end{cases}
+\end{align}
+である．
+
+求める確率 $p$ は，
+\begin{align}
+  p &= \sum_{i=1}^{n} \, \left( \frac{1}{n} p_{i} \right) \\
+    &= \frac{1}{n} \, \left( \sum_{i=1}^{n} \, p_{i} \right)
+\end{align}
+であり，$ \displaystyle \sum_{i=1}^{n} \, p_{i} $ について，$ k \leq n $ のとき，
+\begin{align}
+  \sum_{i=1}^{n} \, p_{i} &= ( n - k ) + \sum_{i=1}^{k} \, p_{i}
+\end{align}
+であるから，
+\begin{align}
+  p &= %
+    \begin{cases}
+      \qquad \displaystyle \frac{1}{n} \, \left\{ ( n - k ) + \sum_{i=1}^{k} \, p_{i} \right\} & \qquad \text{ ( $ k \leq n $ ) } \\[12pt]
+      \qquad \displaystyle \frac{1}{n} \, \left( \sum_{i=1}^{n} \, p_{i} \right) & \qquad \text{（上記以外）}
+    \end{cases}
+\end{align}
+である．
+
+\end{document}
