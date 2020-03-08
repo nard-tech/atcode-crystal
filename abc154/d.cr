@@ -4,7 +4,5 @@
 n, k = read_line.split.map(&.to_i64)
 p = read_line.split.map(&.to_i64)
 
-expected_values = p.map { |pi| (pi + 1) * 1.0 / 2 }
-puts expected_values.each_cons(k).map { |values|
-    values.sum
-}.max
+p_pairs = p.each_cons(k).to_a
+puts (p_pairs.map(&.sum).max + k) / 2.0
