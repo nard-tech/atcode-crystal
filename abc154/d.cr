@@ -4,39 +4,14 @@
 n, k = read_line.split.map(&.to_i64)
 p = read_line.split.map(&.to_i64)
 
-class Pair
-  def initialize(array : Array(Int64), from : Int64)
-    @array = array
-    @from = from
-  end
-
-  getter :from
-
-  def sum
-    @array.sum
-  end
-end
-
-p_pairs = p.each_cons(k)
-pairs = [] of Pair
-p_pairs.each.with_index(0) do |p_pair, i|
-  pairs.push(Pair.new(p_pair, i.to_i64))
-end
-
-def calc_max_sum(pairs : Array(Pair))
-  if pairs.size == 1
-    pairs.first.sum
+s = Array(Int64).new
+p.each_with_index do |pi, i|
+  if i == 0
+    s.push(pi)
   else
-    last_index_of_first = (pairs.size - 1) / 2
-    first_index_of_last = last_index_of_first + 1
-    groups = [
-      pairs[0..last_index_of_first],
-      pairs[first_index_of_last..(pairs.size - 1)]
-    ] # Array(Array(Pair))
-    groups.map { |group|
-      calc_max_sum(group)
-    }.max
+    s.push(s[i - 1] + pi)
   end
 end
 
-puts (calc_max_sum(pairs) + k) / 2.0
+result = (0.upto(n - k).map { |j| s[j + k - 1] - (j == 0 ? 0 : s[j - 1]) }.max + k) / 2.0
+puts result
