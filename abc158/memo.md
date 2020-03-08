@@ -8,7 +8,9 @@ AC
 
 ##  B - Count Balls
 
-**WA**
+**WA** → AC
+
+問題文をよく読むこと
 
 ```ruby
 # WA
