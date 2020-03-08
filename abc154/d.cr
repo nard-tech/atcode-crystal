@@ -23,4 +23,8 @@ p_pairs.each.with_index(0) do |p_pair, i|
   pairs.push(Pair.new(p_pair, i.to_i64))
 end
 
-puts (pairs.max_of(&.sum) + k) / 2.0
+def calc_max_sum(pairs : Array(Pair))
+  pairs.max_of(&.sum)
+end
+
+puts (calc_max_sum(pairs) + k) / 2.0
