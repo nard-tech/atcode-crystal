@@ -3,11 +3,11 @@
 
 a, b, c = read_line.split.map(&.to_i64)
 
-if (c - (a + b))**2 > 4 * a * b
+if (c - (a + b))**2 > 4 * a * b && c - a - b > 0
   puts "Yes"
 else
   puts "No"
 end
 
-# https://atcoder.jp/contests/panasonic2020/submissions/10904124
-# WA: 001.txt, 003.txt - 005.txt, 011.txt - 022.txt
+# https://atcoder.jp/contests/panasonic2020/submissions/10904148
+# WA: 011.txt - 022.txt
