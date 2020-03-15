@@ -3,7 +3,7 @@
 
 a, b, c = read_line.split.map(&.to_i64)
 
-if (c - (a + b))**2 > 4 * a * b && c - a - b > 0
+if a**2 + b**2 + c**2 - 2 * (a * b + b * c + c * a) > 0 && a + b < c
   puts "Yes"
 else
   puts "No"
