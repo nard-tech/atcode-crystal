@@ -1,7 +1,7 @@
-a, b = gets.chomp.split(/ /).map(&:to_i)
+a, b = gets.chomp.split(/ /)
 
-a_string = 1.upto(b).map { a }.join("")
-b_string = 1.upto(a).map { b }.join("")
+a_string = a * b.to_i
+b_string = b * a.to_i
 
 if a_string < b_string
   puts a_string
