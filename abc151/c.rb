@@ -17,10 +17,7 @@ end
 
 # puts groups
 
-acs = 0
-was = 0
-
-groups.each do |problem, answers|
+def process_answers(answers, acs, was)
   answers.each do |answer|
     if answer == "WA"
       was += 1
@@ -29,6 +26,15 @@ groups.each do |problem, answers|
       break
     end
   end
+
+  return acs, was
+end
+
+acs = 0
+was = 0
+
+groups.each do |problem, answers|
+  acs, was = process_answers(answers, acs, was)
 end
 
 puts "#{acs} #{was}"
