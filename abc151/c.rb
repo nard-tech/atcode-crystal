@@ -18,11 +18,12 @@ end
 # puts groups
 
 def process_answers(answers, acs, was)
+  if answers.all? { |answer| answer =="WA" }
+    return [0, 0]
+  end
+
   answers.each_with_index do |answer, i|
     if answer == "WA"
-      if i == answer.length - 1
-        return 0, 0
-      end
       was += 1
     elsif answer == "AC"
       acs += 1
