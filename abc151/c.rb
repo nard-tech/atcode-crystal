@@ -19,9 +19,9 @@ end
 
 def process_answers(answers, acs, was)
   if answers.all? { |answer| answer =="WA" }
-    return [0, 0]
+    return [acs, was]
   elsif answers.all? { |answer| answer =="WA" }
-    return [1, 0]
+    return [acs + 1, was]
   else
     answers.each do |answer|
       if answer == "WA"
