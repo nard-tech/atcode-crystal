@@ -20,18 +20,18 @@ end
 def process_answers(answers, acs, was)
   if answers.all? { |answer| answer =="WA" }
     return [0, 0]
-  end
-
-  answers.each_with_index do |answer, i|
-    if answer == "WA"
-      was += 1
-    elsif answer == "AC"
-      acs += 1
-      return acs, was
+  elsif answers.all? { |answer| answer =="WA" }
+    return [1, 0]
+  else
+    answers.each do |answer|
+      if answer == "WA"
+        was += 1
+      elsif answer == "AC"
+        acs += 1
+        return acs, was
+      end
     end
   end
-
-  return acs, was
 end
 
 acs = 0
