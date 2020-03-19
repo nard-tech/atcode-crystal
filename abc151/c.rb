@@ -15,7 +15,7 @@ ps_array.each do |ps|
   end
 end
 
-puts groups
+# puts groups
 
 acs = 0
 was = 0
