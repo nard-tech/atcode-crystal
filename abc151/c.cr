@@ -13,9 +13,9 @@ groups.each do |problem, pss|
   pss.each do |ps|
     answer = ps[1]
     if answer == "WA"
-      was += 1
+      was += 1_i64
     elsif answer == "AC"
-      acs += 1
+      acs += 1_i64
       break
     end
   end
