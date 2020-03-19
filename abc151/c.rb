@@ -23,7 +23,7 @@ def process_answers(answers, acs, was)
       was += 1
     elsif answer == "AC"
       acs += 1
-      break
+      return acs, was
     end
   end
 
