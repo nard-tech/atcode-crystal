@@ -9,19 +9,17 @@ a_uniq_size = a.uniq.size
 class Pattern
   def initialize(i)
     @i = i
-    @array = []
+    @count = 0
   end
 
-  def push(k)
-    @array.push(k)
+  def increment
+    @count = @count + 1
   end
 
-  def size
-    @size ||= @array.size
-  end
+  attr_reader :count
 
   def calc
-    @calc ||= size * (size - 1) / 2
+    @calc ||= count * (count - 1) / 2
   end
 end
 
@@ -39,7 +37,7 @@ else
 
   a.each_with_index do |ai, i|
     h[ai] ||= Pattern.new(ai)
-    h[ai].push(i)
+    h[ai].increment
   end
 
   base = h.values.map(&:calc).sum
@@ -49,7 +47,7 @@ else
   a.each_with_index do |ai, i|
     pattern = h[ai]
     if h2[ai].nil?
-      result = base - (pattern.size - 1)
+      result = base - (pattern.count - 1)
       h2[ai] = result
       puts result
     else
