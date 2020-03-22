@@ -25,7 +25,7 @@ end
 
 h = {}
 
-a.each_with_index do |ai, i|
+a.each do |ai|
   h[ai] ||= Pattern.new(ai)
   h[ai].increment
 end
@@ -39,8 +39,8 @@ a.each_with_index do |ai, i|
   if h2[ai].nil?
     result = base - (pattern.count - 1)
     h2[ai] = result
-    puts result
   else
-    puts h2[ai]
+    result = h2[ai]
   end
+  puts result
 end
