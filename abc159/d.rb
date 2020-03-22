@@ -35,8 +35,8 @@ base = h.values.map(&:calc).sum
 h2 = {}
 
 a.each_with_index do |ai, i|
-  pattern = h[ai]
   if h2[ai].nil?
+    pattern = h[ai]
     result = base - (pattern.count - 1)
     h2[ai] = result
   else
