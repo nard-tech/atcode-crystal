@@ -12,11 +12,11 @@ class Pattern
     @count = 0
   end
 
-  def increment
-    @count = @count + 1
-  end
-
   attr_reader :count
+
+  def increment
+    @count = count + 1
+  end
 
   def calc
     @calc ||= count * (count - 1) / 2
@@ -30,7 +30,7 @@ a.each do |ai|
   h[ai].increment
 end
 
-base = h.values.map(&:calc).sum
+base = h.values.map { |value| value.calc }.reduce(0) { |acc, i| acc + i }
 
 h2 = {}
 
