@@ -34,6 +34,8 @@ array_of_ab.each_with_index do |ab, i|
   shops.push(Shop.new(i, a, b))
 end
 
+shops = shops.sort_by { |shop| [shop.a, shop.a + shop.b] }
+
 i = 0_i64
 t = 0_i64
 
@@ -48,10 +50,7 @@ while b
     break
   end
 
-  next_shop = shops.min_by { |shop|
-    shop.waiting_time(arrival_time)
-  }
-  shops = shops.select { |shop| next_shop.shop_number != shop.shop_number }
+  next_shop = shops.shift
 
   # 到着 - 待機
   waiting_time = next_shop.waiting_time(arrival_time)
