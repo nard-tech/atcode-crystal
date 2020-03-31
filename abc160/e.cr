@@ -15,18 +15,8 @@ class Apple
   getter :point, :color
 end
 
-apples = [] of Apple
-red_candidates = p.sort.reverse[0..(x - 1)]
-green_candidats = q.sort.reverse[0..(y - 1)]
+red_apples = p.sort.reverse[0..(x - 1)].map { |i| Apple.new(i, :red) }
+green_apples = q.sort.reverse[0..(y - 1)].map { |i| Apple.new(i, :green) }
+transparent_apples = r.sort.reverse[0..([(x + y), c].min - 1)].map { |i| Apple.new(i, :transparent) }
 
-p.each do |i|
-  apples.push(Apple.new(i, :red))
-end
-
-q.each do |i|
-  apples.push(Apple.new(i, :green))
-end
-
-r.each do |i|
-  apples.push(Apple.new(i, :transparent))
-end
+puts (red_apples + green_apples + transparent_apples).sort_by(&.point).reverse[0..(x + y - 1)].map(&.point).sum
