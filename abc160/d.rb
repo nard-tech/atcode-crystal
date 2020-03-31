@@ -1,87 +1,42 @@
 # ABC 160 D - Line++
 # https://atcoder.jp/contests/abc160/tasks/abc160_d
 
-class Node
-  attr_accessor :id, :edges, :cost, :done, :from
+n, x, y = gets.chomp.split(/ /).map(&:to_i)
+a = n.times.map { n.times.map { Float::INFINITY }}
 
-  def initialize(id, edges = [], cost = nil, done = false)
-    @id, @edges, @cost, @done = id, edges, cost, done
-  end
+(0..(n - 2)).each do |from|
+  to = from + 1
+  a[from][to] = 1
+  a[to][from] = 1
 end
 
-class Edge
-  attr_reader :cost, :nid
-  def initialize(cost, nid)
-    @cost, @nid = cost, nid
-  end
+(0..(n - 1)).each do |i|
+  a[i][i] = Float::INFINITY
 end
 
-class Graph
-  def initialize(data)
-    @nodes =
-      data.map do |id, edges|
-        edges.map! { |edge| Edge.new(*edge) }
-        Node.new(id, edges)
-      end
-  end
+a[x - 1][y - 1] = 1
+a[y - 1][x - 1] = 1
 
-  def route(sid, gid)
-    dijkstra(sid)
-    base = @nodes.find { |node| node.id == gid }
-    @res = [base]
-    while base = @nodes.find { |node| node.id == base.from }
-      @res << base
-    end
-    @res
-  end
-
-  def print_route(sid, gid)
-    route(sid, gid)
-    # puts @res.reverse.map { |node| "#{node.id}(#{node.cost})" }.join(" -> ")
-    puts @res.reverse.last.cost
-  end
-
-  def cost(nid, sid)
-    dijkstra(sid)
-    @nodes.find { |node| node.id == nid }.cost
-  end
-
-  private
-
-  def dijkstra(sid)
-    @nodes.each do |node|
-      node.cost = node.id == sid ? 0 : nil
-      node.done = false
-      node.from = nil
-    end
-
-    loop do
-      done_node = nil
-      @nodes.each do |node|
-        next if node.done or node.cost.nil?
-        done_node = node if done_node.nil? or node.cost < done_node.cost
-      end
-      break unless done_node
-      done_node.done = true
-      done_node.edges.each do |edge|
-        to = @nodes.find{ |node| node.id == edge.nid }
-        cost = done_node.cost + edge.cost
-        from = done_node.id
-        if to.cost.nil? || cost < to.cost
-          to.cost = cost
-          to.from = from
-        end
-      end
+for k in 0..(n - 1)
+  for i in 0..(n - 1)
+    for j in 0..(n - 1)
+      distance = [a[i][j], a[i][k] + a[k][j]].min
+      # puts "#{i + 1} -> #{j + 1} : #{distance}"
+      a[i][j] = distance
     end
   end
 end
 
-data = {}
-data[1] = [[1, 2]]
-2.upto(n - 1).each do |i|
-  data[i] = [[1, i - 1], [1, i + 1]]
-end
-data[n] = [[1, n - 1]]
+# a.each do |ai|
+#   puts ai.inspect
+# end
 
- g = Graph.new(data)
- g.print_route(:s, :g)
+a_flatten = a.flatten
+
+1.upto(n - 1) do |i|
+  if i == 2
+    puts (a_flatten.select { |j| i == j }.length - n) / 2
+  else
+    puts a_flatten.select { |j| i == j }.length / 2
+  end
+end
