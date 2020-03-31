@@ -32,11 +32,20 @@ end
 # end
 
 a_flatten = a.flatten
+h = a_flatten.group_by { |i| i }
+
+# puts h
 
 1.upto(n - 1) do |i|
-  if i == 2
-    puts (a_flatten.select { |j| i == j }.length - n) / 2
+  v = h[i]
+
+  if v
+    if i == 2
+      puts (v.length - n) / 2
+    else
+      puts (v.length / 2)
+    end
   else
-    puts a_flatten.select { |j| i == j }.length / 2
+    puts 0
   end
 end
