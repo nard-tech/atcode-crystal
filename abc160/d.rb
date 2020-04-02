@@ -2,49 +2,76 @@
 # https://atcoder.jp/contests/abc160/tasks/abc160_d
 
 n, x, y = gets.chomp.split(/ /).map(&:to_i)
-a = n.times.map { n.times.map { Float::INFINITY }}
 
-(0..(n - 2)).each do |from|
-  to = from + 1
-  a[from][to] = 1
-  a[to][from] = 1
-end
+module WarshallFloyd
+  class Undirected
+    def initialize(n)
+      @n = n
+      @array = 1.upto(n).map { |i| i.times.map { Float::INFINITY } }
 
-(0..(n - 1)).each do |i|
-  a[i][i] = Float::INFINITY
-end
+      # puts @array.inspect
 
-a[x - 1][y - 1] = 1
-a[y - 1][x - 1] = 1
+      (1..n).each do |i|
+        set_distance(i, i, 0)
+      end
 
-for k in 0..(n - 1)
-  for i in 0..(n - 1)
-    for j in 0..(n - 1)
-      distance = [a[i][j], a[i][k] + a[k][j]].min
-      # puts "#{i + 1} -> #{j + 1} : #{distance}"
-      a[i][j] = distance
+      # puts @array.inspect
+
+      (1..(n - 1)).each do |from|
+        to = from + 1
+        set_distance(from, to, 1)
+      end
+
+      # puts @array.inspect
+    end
+
+    attr_reader :array, :n
+
+    def execute
+      for k in 1..n
+        for from in 1..n
+          for to in from..n
+            # puts "#{from} -> #{to} : #{distance(from, to).inspect}"
+            new_distance = [
+              distance(from, to),
+              distance(from, k) + distance(k, to)
+            ].min
+            set_distance(from, to, new_distance)
+          end
+        end
+      end
+
+      self
+    end
+
+    private
+
+    def distance(from, to)
+      if from <= to
+        @array[to - 1][from - 1]
+      else
+        @array[from - 1][to - 1]
+      end
+    end
+
+    def set_distance(from, to, distance)
+      @array[to - 1][from - 1] = distance
     end
   end
 end
 
-# a.each do |ai|
-#   puts ai.inspect
-# end
+warshall_floyd = WarshallFloyd::Undirected.new(n)
+warshall_floyd.instance_eval do
+  set_distance(x, y, 1)
+end
 
-a_flatten = a.flatten
+a_flatten = warshall_floyd.execute.array.flatten
 h = a_flatten.group_by { |i| i }
-
-# puts h
 
 1.upto(n - 1) do |i|
   v = h[i]
-
   if v
-    if i == 2
-      puts (v.length - n) / 2
-    else
-      puts (v.length / 2)
-    end
+    puts v.length
   else
     puts 0
   end
