@@ -13,9 +13,19 @@ class Lamp
 
   getter :switch_numbers, :p
 
-  def valid?(switch_pattern : String)
-    switch_patterns = switch_numbers.map { |i| switch_pattern[i - 1] }
+  def valid?(switch_pattern : SwitchPattern)
+    switch_patterns = switch_numbers.map { |i| switch_pattern.at(i) }
     switch_patterns.select { |switch_pattern| switch_pattern == '1' }.size % 2 == p
+  end
+end
+
+class SwitchPattern
+  def initialize(pattern : String)
+    @pattern = pattern
+  end
+
+  def at(i : Int64)
+    @pattern[i - 1]
   end
 end
 
@@ -26,7 +36,7 @@ ks.each_with_index do |lamp_ks, i|
   lamps.push(Lamp.new(a, p_s[i]))
 end
 
-switch_patterns = 1.upto(2 ** n).map { |i| ("0" * n + i.to_s(2))[-n..-1] }
+switch_patterns = 1.upto(2 ** n).map { |i| ("0" * n + i.to_s(2))[-n..-1] }.map { |pattern| SwitchPattern.new(pattern) }
 
 puts switch_patterns.select { |switch_pattern|
   lamps.all? { |lamp| lamp.valid?(switch_pattern) }
