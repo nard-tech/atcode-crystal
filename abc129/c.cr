@@ -4,24 +4,20 @@
 n, m = read_line.split.map(&.to_i64)
 a = Array.new(m) { read_line.to_i64 }
 
-patterns = [] of Int64
-
-patterns.push(1_i64) # patterns[0]
-
-if a.includes?(1_i64)
-  patterns.push(0_i64)
-else
-  patterns.push(1_i64) # patterns[1]
-end
-
 mod = 1_000_000_007
 
-2_i64.upto(n).each do |i|
-  if a.includes?(i.to_i64)
-    patterns.push(0_i64)
-  else
-    patterns.push((patterns[i - 2].to_i64 + patterns[i - 1].to_i64) % mod)
+patterns = Array.new(n + 1) { 0_i64 }
+
+patterns[0] = 1_i64
+
+0_i64.upto(n).each do |i|
+  if i + 1 <= n && !a.includes?(i + 1)
+    patterns[i + 1] += patterns[i] % mod
+  end
+
+  if i + 2 <= n && !a.includes?(i + 2)
+    patterns[i + 2] += patterns[i] % mod
   end
 end
 
-puts patterns[n]
+puts patterns[n] % mod
