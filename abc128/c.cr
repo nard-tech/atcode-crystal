@@ -14,18 +14,30 @@ class Lamp
   getter :switch_numbers, :p
 
   def valid?(switch_pattern : SwitchPattern)
-    switch_patterns = switch_numbers.map { |i| switch_pattern.at(i) }
-    switch_patterns.select { |switch_pattern| switch_pattern == '1' }.size % 2 == p
+    switch_patterns = switch_numbers.map { |i| switch_pattern.at(i) }.select(&.on?).size % 2 == p
   end
 end
 
 class SwitchPattern
   def initialize(pattern : String)
-    @pattern = pattern
+    @conditions = [] of SwitchCondition
+    pattern.split(//).each do |str|
+      @conditions.push(SwitchCondition.new(str))
+    end
   end
 
   def at(i : Int64)
-    @pattern[i - 1]
+    @conditions[i - 1]
+  end
+end
+
+class SwitchCondition
+  def initialize(str : String)
+    @str = str
+  end
+
+  def on?
+    @str == "1"
   end
 end
 
