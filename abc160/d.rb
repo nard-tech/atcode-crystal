@@ -8,8 +8,7 @@ for i in 1..(n - 1) do
   for j in (i + 1)..n do
     array[j - 1][i - 1] = [
       j - i,
-      (x - i).abs + 1 + (y - j).abs,
-      (y - i).abs + 1 + (x - j).abs
+      (x - i).abs + 1 + (y - j).abs
     ].min
   end
 end
