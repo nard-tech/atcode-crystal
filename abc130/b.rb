@@ -1,27 +1,27 @@
-# ABC 130 B - Bounding
-# https://atcoder.jp/contests/abc130/tasks/abc130_b
-
-
-# ./Main.rb:4: warning: assigned but unused variable - n
-
 n, x = gets.split(/ /).map(&:to_i)
-l = gets.split(/ /).map(&:to_i)
+l_list = gets.split(/ /).map(&:to_i)
 
 # puts "n: #{n}"
 # puts "x: #{x}"
-# puts "l: #{l.inspect} (#{l.length})"
+# puts "l_list: #{l_list.inspect} (#{l_list.length})"
 
-d_list = []
-d = 0 #
-i = 0
-while d <= x && i <= n + 1
-  d_list.push(d)
-  # puts "d_list: #{d_list.inspect} (#{d_list.length})"
+class Jump
+  def initialize(d, index)
+    @d = d
+    @index = index
+  end
 
-  if i <= n
-    d = d + l[i - 1]
-    i += 1
+  attr_reader :d, :index
+end
+
+d = [Jump.new(0, 1)]
+l_list.each.with_index(1) do |l, i|
+  d_next = d.last.d + l
+  if d_next <= x
+    d.push(Jump.new(d_next, i + 1))
+  else
+    break
   end
 end
 
-puts i
+puts d.last.index
