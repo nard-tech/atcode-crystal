@@ -1,16 +1,18 @@
 # ABC 130 B - Bounding
 # https://atcoder.jp/contests/abc130/tasks/abc130_b
 
-n, x = gets.split(/ /).map(&:to_i)
-l = gets.split(/ /).map(&:to_i)
+# ./Main.rb:4: warning: assigned but unused variable - n
 
-d_list = []
-d = 0
-i = 1
+_, x = read_line.split.map(&.to_i64)
+l = read_line.split.map(&.to_i64)
+
+d_list = [] of Int64
+d = 0_i64
+i = 1_i64
 while d <= x
   d_list.push(d)
   d = d + l[i - 1]
-  i += 1
+  i += 1_i64
 end
 
-puts i - 1
+puts i - 1_i64
