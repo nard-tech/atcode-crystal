@@ -10,8 +10,8 @@ a.each do |i|
 end
 sum.shift
 
-count = 0
-j_last = 0
+count = 0_i64
+j_last = 0_i64
 
 sum.each_with_index do |s, i|
   if s < k
