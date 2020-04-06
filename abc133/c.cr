@@ -9,7 +9,7 @@ if r - l <= mod
     puts 0
   else
     l_mod = l % mod
-    puts l_mod * (l_mod + 1)
+    puts l_mod * (l_mod + 1) % mod
   end
 else
   puts 0
