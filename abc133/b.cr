@@ -11,7 +11,7 @@ def distance_square(a : Array(Int64), b : Array(Int64))
   }.sum
 end
 
-square_numbers = 1.upto(64).map { |i| i ** 2 }.to_a
+square_numbers = 1.upto(128).map { |i| i ** 2 }.to_a
 
 # puts square_numbers.inspect
 
