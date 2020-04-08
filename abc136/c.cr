@@ -38,7 +38,7 @@ def valid?(cells : Array(Cell)) : Bool
 
   cells.each_with_index do |cell, i|
     if i == 0   # 最初の cell
-      cell.down #     現在の cell を 1 小さくし，次のセルとの差分を 1 大きくする
+      cell.down #   現在の cell を 1 小さくし，次のセルとの差分を 1 大きくする
       next
     end
 
