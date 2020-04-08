@@ -34,9 +34,18 @@ def valid?(cells : Array(Cell)) : Bool
   cells.each_with_index do |cell, i|
     next if cell.diff >= 0
 
-    return false if i > 0 && cells[i - 1].diff == 0
-    cells[i].height -= 1
-    cell.diff = 0_i64
+    # if cell.diff == -1
+
+    if i > 0
+      return false if cells[i - 1].diff == 0
+
+      cells[i].height -= 1
+      cell.diff = 0_i64
+      cells[i - 1].diff -= 1
+    else
+      cells[i].height -= 1
+      cell.diff = 0_i64
+    end
   end
 
   return true
