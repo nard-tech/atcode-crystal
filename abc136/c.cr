@@ -27,9 +27,14 @@ def valid?(h : Array(Int64)) : Bool
           return false if a - b > 1
           h[i - 1] = b
         elsif a <= b
-          next
+          if i == h.size - 2
+            return false if b > c
+          else
+            next
+          end
         end
       end
+
       true
     end
   end
