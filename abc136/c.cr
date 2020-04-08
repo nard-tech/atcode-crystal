@@ -4,43 +4,47 @@
 n = read_line.to_i64
 h = read_line.split.map(&.to_i64)
 
-def valid?(h : Array(Int64)) : Bool
-  if h.size == 1
-    true
-  elsif h.size == 2
-    first, last = h
-    first <= last + 1
-  elsif h.sort == h
-    true
-  else
-    uniq_h = h.uniq
-    if uniq_h.size == 1
-      true
-    elsif uniq_h.size == 2
-      a, b = uniq_h
-      (a - b).abs == 1
-    else
-      1.upto(h.size - 2) do |i|
-        a, b, c = h[i - 1], h[i], h[i + 1]
-        if a > b
-          return false if b > c
-          return false if a - b > 1
-          h[i - 1] = b
-        elsif a <= b
-          if i == h.size - 2
-            return false if b > c
-          else
-            next
-          end
-        end
-      end
-
-      true
-    end
+class Cell
+  def initialize(@height : Int64, @index : Int64)
+    @diff = 10_i64 ** 10
   end
+
+  property :height, :index
+  property diff : Int64
 end
 
-if valid?(h)
+cells = h.map_with_index { |height, i| Cell.new(height, i.to_i64) }
+
+def valid?(cells : Array(Cell)) : Bool
+  return true if cells.size == 1
+
+  cells.each_cons(2) do |ab|
+    a, b = ab
+    diff = b.height - a.height
+    b.diff = diff
+  end
+
+  diffs = [] of Int64
+  cells.each do |cell|
+    diff = cell.diff
+    diffs.push(cell.diff)
+  end
+
+  return false if diffs.any? { |diff| diff < -1 }
+  return true if diffs.all? { |diff| diff >= 0 }
+
+  cells.each_with_index do |cell, i|
+    next if cell.diff >= 0
+
+    return false unless cells[i - 1].diff > 0
+    cells[i - 1].height -= 1
+    cell.diff += 1
+  end
+
+  return true
+end
+
+if valid?(cells)
   puts "Yes"
 else
   puts "No"
