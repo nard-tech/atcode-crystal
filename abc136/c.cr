@@ -21,14 +21,12 @@ def valid?(cells : Array(Cell)) : Bool
   cells.each_cons(2) do |ab|
     a, b = ab
     diff = b.height - a.height
-    b.diff = diff
+    a.diff = diff
   end
 
-  diffs = [] of Int64
-  cells.each do |cell|
-    diff = cell.diff
-    diffs.push(cell.diff)
-  end
+  # puts cells.inspect
+
+  diffs = cells.map(&.diff)
 
   return false if diffs.any? { |diff| diff < -1 }
   return true if diffs.all? { |diff| diff >= 0 }
@@ -36,9 +34,9 @@ def valid?(cells : Array(Cell)) : Bool
   cells.each_with_index do |cell, i|
     next if cell.diff >= 0
 
-    return false unless cells[i - 1].diff > 0
-    cells[i - 1].height -= 1
-    cell.diff += 1
+    return false if i > 0 && cells[i - 1].diff == 0
+    cells[i].height -= 1
+    cell.diff = 0_i64
   end
 
   return true
