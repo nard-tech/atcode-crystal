@@ -17,14 +17,25 @@ class Hero
 
   def initialize(@index : Int32, @power : Int64, @cities : Array(City))
   end
+
+  def kill_monsters(city : City)
+    killed_monsters_of_city = [@power, city.monsters].min
+
+    city.monsters -= killed_monsters_of_city
+    @power -= killed_monsters_of_city
+
+    # puts "city: #{city.index}, killed_monsters_of_city: #{killed_monsters_of_city}"
+
+    return killed_monsters_of_city
+  end
 end
 
-cities = a.map_with_index { |element, i| City.new(i + 1, a[i]) }
+cities = a.map_with_index { |element, i| City.new(i, a[i]) }
 
 heros = [] of Hero
 i = 0
 cities.each_cons(2) do |cities|
-  hero = Hero.new(i + 1, b[i], cities.to_a)
+  hero = Hero.new(i, b[i], cities.to_a)
   heros.push(hero)
   i += 1
 end
@@ -32,22 +43,13 @@ end
 # puts cities
 # puts heros
 
-killed_monsters = 0
+killed_monsters = 0_i64
 
 heros.each do |hero|
   first_city, next_city = hero.cities
 
-  killed_monsters_of_first_city = [hero.power, first_city.monsters].min
-
-  killed_monsters += killed_monsters_of_first_city
-  hero.power -= killed_monsters_of_first_city
-  first_city.monsters -= killed_monsters_of_first_city
-
-  killed_monsters_of_next_city = [hero.power, next_city.monsters].min
-
-  killed_monsters += killed_monsters_of_next_city
-  hero.power -= killed_monsters_of_next_city
-  next_city.monsters -= killed_monsters_of_next_city
+  killed_monsters += hero.kill_monsters(first_city)
+  killed_monsters += hero.kill_monsters(next_city)
 end
 
 puts killed_monsters
