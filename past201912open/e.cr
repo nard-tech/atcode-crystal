@@ -27,10 +27,18 @@ class Query
       matrix[follower_id][followee_id] = 1
       # puts "(1) #{follower_id} follows #{followee_id}"
     elsif @query_type == 2
+      queue = [] of Array(Int64 | Int32)
+
       matrix.each_with_index do |row, user_id|
         next if user_id == follower_id
+        queue.push([follower_id, user_id]) if row[follower_id] == 1
         matrix[follower_id][user_id] = 1 if row[follower_id] == 1
-        # puts "(2) #{follower_id} follows #{user_id}"
+      end
+
+      queue.each do |v|
+        follower_id, followee_id = v
+        matrix[follower_id][followee_id] = 1
+        # puts "(2) #{follower_id} follows #{followee_id}"
       end
     else
       # matrix.each do |row|
