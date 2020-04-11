@@ -2,24 +2,28 @@
 # https://atcoder.jp/contests/past201912-open/tasks/past201912_d
 
 n = read_line.to_i64
-a = Array.new(n) { read_line.to_i64 }.sort
+a = Array.new(n) { read_line.to_i64 }
 
-valid = true
-converted_before = 0_i64
-converted_after = 0_i64
+a_uniq = a.uniq
 
-a.each_with_index(1) do |element, i|
-  if element == i
-    converted_after = element unless valid
-  else
-    valid = false
-    # puts "element: #{element}, i: #{i}"
-    converted_before = i if converted_before == 0
-  end
-end
-
-if valid
+if a_uniq.size == n
   puts "Correct"
 else
-  puts "#{converted_after} #{converted_before}"
+  a_sorted = a.sort
+
+  duplicated = 0
+  converted = 0
+
+  a.sort.each_cons(2) do |pair|
+    before, after = pair
+    next if before + 1 == after
+
+    if before == after
+      duplicated = before
+    elsif after - before > 1
+      converted = before + 1
+    end
+  end
+
+  puts "#{duplicated} #{converted}"
 end
