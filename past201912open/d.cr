@@ -2,15 +2,24 @@
 # https://atcoder.jp/contests/past201912-open/tasks/past201912_d
 
 n = read_line.to_i64
-a = Array.new(n) { read_line.to_i64 }
+a = Array.new(n) { read_line.to_i64 }.sort
 
-a_uniq = a.uniq
+valid = true
+converted_before = 0_i64
+converted_after = 0_i64
 
-if a_uniq.size == n
+a.each_with_index(1) do |element, i|
+  if element == i
+    converted_after = element unless valid
+  else
+    valid = false
+    # puts "element: #{element}, i: #{i}"
+    converted_before = i if converted_before == 0
+  end
+end
+
+if valid
   puts "Correct"
 else
-  a_valid = 1_i64.upto(n).to_a
-  converted_before = (a_valid - a_uniq).shift
-  converted_after = a_valid.find { |i| a.count(i) == 2 }
   puts "#{converted_after} #{converted_before}"
 end
