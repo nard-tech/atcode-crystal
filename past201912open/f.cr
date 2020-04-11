@@ -14,4 +14,4 @@ while !scanner.eos?
   a.push(result) unless result.nil?
 end
 
-puts a.sort.join("")
+puts a.sort_by(&.downcase).join("")
