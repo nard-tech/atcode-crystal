@@ -32,7 +32,6 @@ class Query
       matrix.each_with_index do |row, user_id|
         next if user_id == follower_id
         queue.push([follower_id, user_id]) if row[follower_id] == 1
-        matrix[follower_id][user_id] = 1 if row[follower_id] == 1
       end
 
       queue.each do |v|
