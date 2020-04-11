@@ -27,17 +27,22 @@ class Query
       matrix[follower_id][followee_id] = 1
       # puts "(1) #{follower_id} follows #{followee_id}"
     elsif @query_type == 2
+      # matrix.each do |row|
+      #   puts row.map { |cell| cell == 0 ? "N" : "Y" }.join(" ")
+      # end
+
       queue = [] of Array(Int64 | Int32)
 
       matrix.each_with_index do |row, user_id|
         next if user_id == follower_id
-        queue.push([follower_id, user_id]) if row[follower_id] == 1
+        next if row[follower_id] == 0
+        queue.push([follower_id, user_id])
+        # puts "(2) #{follower_id} follows #{user_id}"
       end
 
       queue.each do |v|
         follower_id, followee_id = v
         matrix[follower_id][followee_id] = 1
-        # puts "(2) #{follower_id} follows #{followee_id}"
       end
     else
       # matrix.each do |row|
@@ -55,6 +60,7 @@ class Query
         matrix[followee_id].each_with_index do |cell2, followee_of_followee_id|
           next if cell2 == 0
           queue.push([follower_id, followee_of_followee_id])
+          # puts "(3) #{follower_id} follows #{followee_of_followee_id} (via #{followee_id})"
         end
       end
 
