@@ -4,9 +4,13 @@
 n = read_line.to_i64
 a = Array.new(n) { read_line.to_i64 }
 
-a_uniq = a.uniq
-
-if a_uniq.size == n
+if a.size == 1
+  if a.first == 1
+    puts "Correct"
+  else
+    puts "#{a.first} 1"
+  end
+elsif a.uniq.size == n
   puts "Correct"
 else
   a_sorted = a.sort
