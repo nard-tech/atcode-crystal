@@ -10,6 +10,17 @@ if a.size == 1
   else
     puts "#{a.first} 1"
   end
+elsif a.size == 2
+  if a.first == 1 && a.last == 2
+    puts "Correct"
+  else
+    a_uniq = a.uniq
+    if a_uniq.first == 1
+      puts "2 1"
+    else
+      puts "1 2"
+    end
+  end
 elsif a.uniq.size == n
   puts "Correct"
 else
