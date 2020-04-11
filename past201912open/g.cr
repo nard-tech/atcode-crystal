@@ -111,8 +111,8 @@ end
   end
 end
 
-group_patterns.each do |group_pattern|
-  puts group_pattern.inspect
-end
+# group_patterns.each do |group_pattern|
+#   puts group_pattern.inspect
+# end
 
 puts group_patterns.map { |group_pattern| group_pattern.calc_happiness(happiness) }.max
