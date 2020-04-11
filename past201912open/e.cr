@@ -48,26 +48,27 @@ class Query
     queue = [] of Array(Int64)
 
     # puts "for follower #{follower_id}"
-    matrix[follower_id].each_with_index do |cell, followee_id|
-      next if followee_id == follower_id
-      next unless follow?(matrix, follower_id.to_i64, followee_id.to_i64)
+    matrix[follower_id].each_with_index do |cell, user_id|
+      next if user_id == follower_id
+      next unless follow?(matrix, follower_id.to_i64, user_id.to_i64)
 
-      # puts "  for #{followee_id}"
-      follow_follow_sub(matrix, queue)
+      # puts "  for #{user_id}"
+      follow_follow_sub(matrix, user_id, queue)
     end
 
     process_queue(matrix, queue)
   end
 
-  private def follow_follow_sub(matrix, queue)
-    matrix[followee_id].each_with_index do |cell2, followee_of_followee_id|
+  private def follow_follow_sub(matrix, user_id, queue)
+    matrix[user_id].each_with_index do |cell, followee_of_followee_id|
       next if followee_of_followee_id == follower_id
-      next unless follow?(matrix, followee_id.to_i64, followee_of_followee_id.to_i64)
-      queue.push([followee_id.to_i64, followee_of_followee_id.to_i64])
+      next unless follow?(matrix, user_id.to_i64, followee_of_followee_id.to_i64)
+      queue.push([follower_id.to_i64, followee_of_followee_id.to_i64])
     end
   end
 
   private def process_queue(matrix, queue : Array(Array(Int64)))
+    # puts queue
     queue.each do |v|
       from, to = v
       follow(matrix, from, to)
