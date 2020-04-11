@@ -16,9 +16,9 @@ elsif a.size == 2
   else
     a_uniq = a.uniq
     if a_uniq.first == 1
-      puts "2 1"
-    else
       puts "1 2"
+    else
+      puts "2 1"
     end
   end
 elsif a.uniq.size == n
