@@ -67,5 +67,5 @@ queries.each do |query|
 end
 
 matrix.each do |row|
-  puts row.map { |cell| cell == 0 ? "N" : "Y" }.join(" ")
+  puts row.map { |cell| cell == 0 ? "N" : "Y" }.join("")
 end
