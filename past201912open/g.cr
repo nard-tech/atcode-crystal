@@ -82,10 +82,9 @@ all_members = 1.upto(n).map(&.to_i64).to_a
 group_patterns.push(GroupPattern.new([Group.new(all_members)]))
 
 1.upto(n / 2).each do |i|
-  groups = [] of Group
-
   combinations = all_members.combinations(i)
   combinations.each do |group_a|
+    groups = [] of Group
     group_b = all_members - group_a
 
     groups.push(Group.new(group_a))
@@ -99,9 +98,10 @@ end
   combinations = all_members.combinations(i)
   1.upto((n - i) / 2) do |j|
     combinations.each do |group_a|
-      other_combinations = (all_members - group_a).combinations(j)
+      members_except_for_group_a = all_members - group_a
+      other_combinations = members_except_for_group_a.combinations(j)
       other_combinations.each do |group_b|
-        group_c = (all_members - group_a - group_b)
+        group_c = (members_except_for_group_a - group_b)
 
         group_patterns.push(
           GroupPattern.new([Group.new(group_a), Group.new(group_b), Group.new(group_c)])
@@ -109,6 +109,10 @@ end
       end
     end
   end
+end
+
+group_patterns.each do |group_pattern|
+  puts group_pattern.inspect
 end
 
 puts group_patterns.map { |group_pattern| group_pattern.calc_happiness(happiness) }.max
