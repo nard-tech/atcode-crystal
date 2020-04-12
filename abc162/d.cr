@@ -19,7 +19,7 @@ def generate_index_array(a : Array(String))
     b_indexes.push(i.to_i64) if str == "B"
   end
 
-  [r_indexes.sort, g_indexes.sort, b_indexes.sort]
+  [r_indexes, g_indexes, b_indexes]
 end
 
 def count_combinations(a1 : Array(Int64), a2 : Array(Int64), a3 : Array(Int64))
@@ -46,13 +46,17 @@ end
 
 r, g, b = generate_index_array(rgb)
 
-sum = 0_i64
+products = [] of Array(Int64)
+products += Array.product(r, g, b)
+products += Array.product(r, b, g)
+products += Array.product(g, r, b)
+products += Array.product(g, b, r)
+products += Array.product(b, r, g)
+products += Array.product(b, g, r)
 
-sum += count_combinations(r, g, b)
-sum += count_combinations(r, b, g)
-sum += count_combinations(g, r, b)
-sum += count_combinations(g, b, r)
-sum += count_combinations(b, r, g)
-sum += count_combinations(b, g, r)
+# puts products
 
-puts sum
+puts products.select { |array|
+  a, b, c = array
+  a < b < c && b - a != c - b
+}.size
