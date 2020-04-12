@@ -8,14 +8,18 @@ rgb = s.split(//).map(&.to_s).to_a
 
 # puts rgb
 
-def generate_index_array(a : Array(String), color : String)
-  index_array = [] of Int64
+def generate_index_array(a : Array(String))
+  r_indexes = [] of Int64
+  g_indexes = [] of Int64
+  b_indexes = [] of Int64
 
   a.each_with_index do |str, i|
-    index_array.push(i.to_i64) if str == color
+    r_indexes.push(i.to_i64) if str == "R"
+    g_indexes.push(i.to_i64) if str == "G"
+    b_indexes.push(i.to_i64) if str == "B"
   end
 
-  index_array
+  [r_indexes, g_indexes, b_indexes]
 end
 
 def count_combinations(a1 : Array(Int64), a2 : Array(Int64), a3 : Array(Int64))
@@ -31,9 +35,7 @@ def count_combinations(a1 : Array(Int64), a2 : Array(Int64), a3 : Array(Int64))
   count
 end
 
-r = generate_index_array(rgb, "R")
-g = generate_index_array(rgb, "G")
-b = generate_index_array(rgb, "B")
+r, g, b = generate_index_array(rgb)
 
 sum = 0_i64
 
