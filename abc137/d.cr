@@ -6,16 +6,16 @@ a_and_b = Array.new(n) { read_line.split.map(&.to_i64) }
 
 class Job
   def initialize(@payment_duration : Int64, @price : Int64, limit : Int64)
-    @should_begin_on = limit - payment_duration
+    @should_begin_until = limit - payment_duration
     @execute_on = nil
   end
 
   getter :payment_duration, :price
-  getter should_begin_on : Int64
+  getter should_begin_until : Int64
   property execute_on : Int64 | Nil
 
   def executable_on(day_number : Int64)
-    should_begin_on >= day_number
+    should_begin_until >= day_number
   end
 end
 
@@ -24,11 +24,14 @@ jobs = a_and_b.map { |ab| a, b = ab; Job.new(a, b, m) }.sort_by(&.price).reverse
 jobs_to_do = [] of Job | Nil
 
 0_i64.upto(m - 1) do |i|
-  job = jobs.find { |job| job.executable_on(i) }
-  if !job.nil?
+  job_index = jobs.index { |job| job.executable_on(i) }
+
+  if !job_index.nil?
+    job = jobs[job_index]
     job.as(Job).execute_on = i
+    jobs.delete_at(job_index)
   end
-  jobs.delete(job)
+
   jobs_to_do.push(job)
 end
 
