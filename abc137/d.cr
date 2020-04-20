@@ -29,7 +29,10 @@ jobs_to_do = [] of Job | Nil
   if !job_index.nil?
     job = jobs[job_index]
     job.as(Job).execute_on = i
+
     jobs.delete_at(job_index)
+  else
+    job = nil
   end
 
   jobs_to_do.push(job)
