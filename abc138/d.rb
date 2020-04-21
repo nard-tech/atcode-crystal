@@ -15,7 +15,19 @@ class Node
 end
 
 class Tree
-  attr_reader :number, :value, :children
+  def self.generate_from(root, nodes)
+    # puts "from #{root}"
+    nodes_from_root = nodes[root]
+    if nodes_from_root.nil?
+      children = []
+    else
+      roots_of_children = nodes_from_root.map(&:to)
+      # puts roots_of_children.inspect
+      children = roots_of_children.map { |r| generate_from(r, nodes) }
+    end
+
+    new(root, children)
+  end
 
   def initialize(n, c = [])
     @number = n
@@ -54,20 +66,7 @@ nodes = a_and_b.map { |a, b| Node.new(a, b) }.group_by(&:from)
 # puts nodes
 # puts ""
 
-def generate_tree(root, nodes)
-  # puts "from #{root}"
-  nodes_from_root = nodes[root]
-  if nodes_from_root.nil?
-    children = []
-  else
-    roots_of_children = nodes_from_root.map(&:to)
-    # puts roots_of_children.inspect
-    children = roots_of_children.map { |r| generate_tree(r, nodes) }
-  end
-  Tree.new(root, children)
-end
-
-tree = generate_tree(1, nodes)
+tree = Tree.generate_from(1, nodes)
 
 # puts tree.inspect
 
