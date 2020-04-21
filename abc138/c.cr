@@ -17,3 +17,7 @@ class Item
 end
 
 puts v.sort.map_with_index { |value, i| Item.new(value, i.to_i64) }.map { |item| item.composed_value(n) }.sum
+
+# puts v.sort
+# puts v.sort.map_with_index { |value, i| Item.new(value, i.to_i64) }.map { |item| item.composed_value(n) }
+# puts v.sort.map_with_index { |value, i| Item.new(value, i.to_i64) }.map { |item| item.composed_value(n) }.sum
