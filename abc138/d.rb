@@ -35,17 +35,16 @@ class Tree
     # puts "#{' ' * indent}32: search #{n}"
     # puts "#{' ' * indent}33: #{self.inspect}"
     return self if number == n
-    return nil if children.empty?
 
-    # puts "#{' ' * indent}37: #{children.inspect}"
-    subtree = children.detect { |child| child.search(n, indent: indent + 2) }
-    return nil if subtree.nil?
-    return subtree if subtree.number == n
+    # puts "#{' ' * indent}36: #{children.inspect}"
+    children.each do |child|
+      subtree = child.search(n, indent: indent + 2)
+      return subtree unless subtree.nil?
+    end
 
-    subtree = subtree.search(n)
-    # puts "#{' ' * indent}39: #{subtree.inspect}"
+    # puts "#{' ' * indent}42: #{subtree.inspect}"
     # puts "#{' ' * indent}43: #{subtree.inspect}"
-    subtree
+    return nil
   end
 end
 
