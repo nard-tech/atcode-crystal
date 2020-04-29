@@ -17,9 +17,8 @@ end
 
 items = a.map { |price| Item.new(price) }.sort_by(&.price)
 m.times do
-  item = items.last
+  item = items.max_by(&.price)
   item.discount!
-  items = items.sort_by(&.price)
 end
 
 puts items.map(&.price).sum
