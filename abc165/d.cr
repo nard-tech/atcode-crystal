@@ -6,9 +6,11 @@ if n < b
   x = n
   x_per_b = x * 1.0.to_f64 / b
   puts (a * x_per_b).floor.to_i64 - a * x_per_b.floor.to_i64
-else
-  puts (0..(b - 1)).max_by { |x|
+elsif a > b
+  puts (0..(b - 1)).max_of { |x|
     x_per_b = x * 1.0.to_f64 / b
     (a * x_per_b).floor.to_i64 - a * x_per_b.floor.to_i64
   }
+else
+  puts a - 1
 end
