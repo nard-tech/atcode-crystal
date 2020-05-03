@@ -3,7 +3,7 @@
 
 a, b, n = read_line.split.map(&.to_i64)
 if n < b
-  puts (n * a * 1.0 / b).floor.to_i64
+  puts (n * a * 1.0.to_f64 / b).floor.to_i64
 else
   puts a - 1
 end
