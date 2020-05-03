@@ -3,8 +3,10 @@
 
 a, b, n = gets.split(/ /).map(&:to_i)
 
+require 'bigdecimal'
+
 def calc(a, b, x)
-  x_per_b = x * 1.0 / b
+  x_per_b = BigDecimal((BigDecimal(x.to_s) * 1.0 / b).to_s)
   (a * x_per_b).floor - a * x_per_b.floor
 end
 
