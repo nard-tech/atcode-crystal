@@ -1,11 +1,11 @@
 # ABC 143 D - Triangles
 # https://atcoder.jp/contests/abc143/tasks/abc143_d
 
-# 1607 ms, 1912 KB
-# https://atcoder.jp/contests/abc143/submissions/12697559
+# 1629 ms, 1916 KB
+# https://atcoder.jp/contests/abc143/submissions/12697616
 
 n = gets.chomp.to_i
-l = gets.chomp.split(/ /).map(&:to_i).sort
+l = gets.chomp.split(/ /).map(&:to_i).sort.reverse
 
 # puts sticks.inspect
 # puts ""
@@ -16,11 +16,11 @@ count = 0
   (i + 1).upto(n - 2) do |j|
     b = l[j]
     c_candidates = l[(j + 1)..(n - 1)]
-    t = a + b
+    t = a - b
     # puts "--------"
     # puts c_candidates.inspect
-    # puts "a: #{a}, b: #{b}, a + b: #{t}"
-    c_over_index = c_candidates.bsearch_index { |c| c >= t }
+    # puts "a: #{a}, b: #{b}, a - b: #{t}"
+    c_over_index = c_candidates.bsearch_index { |c| c <= t }
     if c_over_index.nil?
       count += (n - 1) - j
     else
