@@ -3,7 +3,9 @@
 
 a, b, n = read_line.split.map(&.to_i64)
 if n < b
-  puts (n * a * 1.0.to_f64 / b).floor.to_i64
+  x = n
+  x_per_b = x * 1.0.to_f64 / b
+  puts ((a * x_per_b).floor - a * x_per_b.floor).to_i64
 else
   puts a - 1
 end
