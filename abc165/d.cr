@@ -3,8 +3,7 @@
 
 a, b, n = read_line.split.map(&.to_i64)
 if n < b
-  k = b * 1.0 / a
-  puts n // k
+  puts (n * a * 1.0 / b).floor.to_i64
 else
   puts a - 1
 end
