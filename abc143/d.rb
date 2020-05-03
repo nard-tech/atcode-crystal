@@ -2,10 +2,10 @@
 # https://atcoder.jp/contests/abc143/tasks/abc143_d
 
 # TLE
-# https://atcoder.jp/contests/abc143/submissions/12697788
+# https://atcoder.jp/contests/abc143/submissions/12697826
 
 n = gets.chomp.to_i
-l = gets.chomp.split(/ /).map(&:to_i).sort
+l = gets.chomp.split(/ /).map(&:to_i).sort.reverse
 
 class Stick
   def initialize(length, index)
@@ -16,7 +16,7 @@ class Stick
   attr_reader :length, :index
 
   def satisfy_triangle_condition?(t)
-    length < t
+    length > t
   end
 end
 
@@ -31,7 +31,7 @@ count = 0
   (i + 1).upto(n - 2) do |j|
     b = sticks[j]
     c_candidates = sticks[(j + 1)..(n - 1)]
-    t = a.length + b.length
+    t = a.length - b.length
     c_over = c_candidates.bsearch { |stick| !stick.satisfy_triangle_condition?(t) }
     if c_over.nil?
       c_last_index = n - 1
@@ -40,7 +40,7 @@ count = 0
     end
     # puts "--------"
     # puts c_candidates.inspect
-    # puts "a: #{a}, b: #{b}, a + b: #{t} -> #{c_last_index - j}"
+    # puts "a: #{a}, b: #{b}, a - b: #{t} -> #{c_last_index - j}"
     # puts ""
     count += c_last_index - j
   end
