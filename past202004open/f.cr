@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_f
 
 # TLE
-# https://atcoder.jp/contests/past202004-open/submissions/12814931
+# https://atcoder.jp/contests/past202004-open/submissions/12815301
 
 n = read_line.to_i64
 ab_s = Array.new(n) { read_line.split.map(&.to_i64) }
@@ -14,14 +14,21 @@ class Task
   getter :begin_at_or_after, :point
 end
 
-tasks = ab_s.map { |ab| a, b = ab; Task.new(a, b) }.sort_by(&.point).reverse
+tasks = ab_s.map { |ab| a, b = ab; Task.new(a, b) }.sort_by(&.begin_at_or_after)
+
+def serach_task(tasks : Array(Task), day : Int64, n : Int64) : Task
+  over_index = tasks.bsearch_index { |task| task.begin_at_or_after > day }
+  over_index = n if over_index.nil?
+  task = tasks[0..(over_index - 1)].max_by(&.point)
+  tasks.delete(task)
+  task
+end
 
 results = [] of Int64
 tasks_to_execute = Hash(Int64, Array(Task)).new { [] of Task }
 
 1.upto(n) do |k|
-  task = tasks.find { |task| task.begin_at_or_after <= k }.as(Task)
-  tasks.delete(task)
+  task = serach_task(tasks, k.to_i64, n)
   if k == 1
     tasks_to_execute[1_i64] = [task]
   else
