@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12828242
+# https://atcoder.jp/contests/past202004-open/submissions/12832215
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -43,8 +43,12 @@ queries.each do |query|
       c = memo[:c]
       x = memo[:x]
 
-      memo[:x] = memo[:l] - d2
-      cs[c] = (cs[c] || 0) + x - memo[:x]
+      tmp = memo[:l] - d2
+
+      cs[c] ||= 0
+      cs[c] += (x - tmp)
+
+      memo[:x] = tmp
     end
 
     removed += cs.values.reduce(0, :+)
