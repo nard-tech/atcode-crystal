@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_f
 
 # TLE
-# https://atcoder.jp/contests/past202004-open/submissions/12818746
+# https://atcoder.jp/contests/past202004-open/submissions/12826510
 
 n = read_line.to_i64
 ab_s = Array.new(n) { read_line.split.map(&.to_i64) }
@@ -16,33 +16,23 @@ end
 
 tasks = ab_s.map { |ab| a, b = ab; Task.new(a, b) }.sort_by(&.point).reverse.group_by(&.begin_at_or_after)
 
-# puts tasks.inspect
+v = Array.new(101, 0)
+sum_of_point = 0
 
-def serach_task(tasks : Hash(Int64, Array(Task)), day : Int64, n : Int64) : Task
-  candidates = [] of Task
-  (1_i64..day).each do |i|
-    next unless tasks.has_key?(i)
-    next if tasks[i].empty?
-    candidates.push(tasks[i].first)
+(1..n).each do |i|
+  if tasks.has_key?(i)
+    tasks[i].each do |task|
+      v[task.point] += 1
+    end
   end
-  task = candidates.max_by(&.point)
-  tasks[task.begin_at_or_after].delete(task)
-  task
-end
 
-results = [] of Int64
-task_points = Hash(Int64, Int64).new { 0_i64 }
-
-1_i64.upto(n) do |k|
-  task = serach_task(tasks, k, n)
-  if k == 1
-    point = task.point
-  else
-    point = task_points[k - 1] + task.point
+  (1..100).reverse_each do |point|
+    if v[point] > 0
+      v[point] -= 1
+      sum_of_point += point
+      break
+    end
   end
-  task_points[k] = point
-end
 
-task_points.values.each do |v|
-  puts v
+  puts sum_of_point
 end
