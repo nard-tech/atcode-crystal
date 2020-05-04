@@ -2,24 +2,17 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_f
 
 # TLE
-# https://atcoder.jp/contests/past202004-open/submissions/12821146
+# https://atcoder.jp/contests/past202004-open/submissions/12821343
 
 n = gets.chomp.to_i
 ab_s = Array.new(n) { gets.chomp.split.map(&:to_i) }
 
 tasks = ab_s.sort_by(&:last).reverse
-schedule = Array.new(n) { nil }
+schedule = (0..(n - 1)).to_a
 
 tasks.each do |task|
-  if schedule[task.first - 1].nil?
-    schedule[task.first - 1] = task
-  else
-    day_index = task.first - 1
-    while !schedule[day_index].nil?
-      day_index += 1
-    end
-    schedule[day_index] = task
-  end
+  day_index = schedule.find { |task_of_day| task_of_day.is_a?(Integer) && task_of_day >= task.first - 1 }
+  schedule[day_index] = task
 end
 
 results = []
