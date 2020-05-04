@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12827781
+# https://atcoder.jp/contests/past202004-open/submissions/12828022
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -24,7 +24,7 @@ queries.each do |query|
     d = a.to_i
     d2 = [d + removed, s].min
 
-    j = (0...queue.size).bsearch { |k|
+    j = (0..(queue.size - 1)).bsearch { |k|
       memo = queue[k]
       d2 < memo[:l]
     }
