@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12832858
+# https://atcoder.jp/contests/past202004-open/submissions/12832900
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -29,6 +29,19 @@ def find_index(memos, d2)
   }
 end
 
+def process_cs(memos, j)
+  h = {}
+
+  last_index = j.nil? ? memos.size : j
+  memos.slice!(0...last_index).each do |memo|
+    c = memo.c
+    h[c] ||= 0
+    h[c] += memo.x
+  end
+
+  h
+end
+
 queries.each do |query|
   t, a, b = query
 
@@ -43,15 +56,7 @@ queries.each do |query|
     d2 = [d + removed, s].min
 
     j = find_index(memos, d2)
-
-    cs = {}
-
-    last_index = j.nil? ? memos.size : j
-    memos.slice!(0...last_index).each do |memo|
-      c = memo.c
-      cs[c] ||= 0
-      cs[c] += memo.x
-    end
+    cs = process_cs(memos, j)
 
     if j
       memo = memos[0]
