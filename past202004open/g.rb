@@ -2,12 +2,12 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12828022
+# https://atcoder.jp/contests/past202004-open/submissions/12828242
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
 
-queue = []
+memos = []
 s = 0
 removed = 0
 
@@ -19,27 +19,30 @@ queries.each do |query|
     x = b.to_i
 
     s += x
-    queue << { c: c, x: x, l: s }
+    memos << { c: c, x: x, l: s }
   else
     d = a.to_i
     d2 = [d + removed, s].min
 
-    j = (0..(queue.size - 1)).bsearch { |k|
-      memo = queue[k]
+    j = (0..(memos.size - 1)).bsearch { |k|
+      memo = memos[k]
       d2 < memo[:l]
     }
 
     cs = {}
 
-    queue.slice!(0...(j || queue.size)).each { |memo|
+    memos.slice!(0...(j || memos.size)).each do |memo|
       c = memo[:c]
-      cs[c] = (cs[c] || 0) + memo[:x]
-    }
+      cs[c] ||= 0
+      cs[c] += memo[:x]
+    end
 
     if j
-      memo = queue[0]
+      memo = memos[0]
+
       c = memo[:c]
       x = memo[:x]
+
       memo[:x] = memo[:l] - d2
       cs[c] = (cs[c] || 0) + x - memo[:x]
     end
