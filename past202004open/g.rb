@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12833215
+# https://atcoder.jp/contests/past202004-open/submissions/12833410
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -38,7 +38,7 @@ def find_index(memos, d2)
   }
 end
 
-def process_cs(memos, j)
+def generate_cs(memos, j)
   h = {}
 
   last_index = j.nil? ? memos.size : j
@@ -65,7 +65,7 @@ queries.each do |query|
     d2 = [d + removed, s].min
 
     j = find_index(memos, d2)
-    cs = process_cs(memos, j)
+    cs = generate_cs(memos, j)
 
     if j
       memo = memos[0]
