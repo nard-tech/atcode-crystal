@@ -1,37 +1,49 @@
 # ABC 166 E - This Message Will Self-Destruct in 5s
 # https://atcoder.jp/contests/abc166/tasks/abc166_e
 
-# TLE
-# https://atcoder.jp/contests/abc166/submissions/12768938
+# AC
+# https://atcoder.jp/contests/abc166/submissions/12809513
 
 n = gets.chomp.to_i
 a = gets.chomp.split(/ /).map(&:to_i)
 
-h = Hash.new
-a.each.with_index(1) do |height, i|
-  h[height] ||= []
-  h[height].push(i)
+class Person
+  def initialize(index, height)
+    @index = index
+    @height = height
+  end
+
+  attr_reader :index, :height
+
+  def index_minus_height
+    @index_minus_height ||= index - height
+  end
+
+  def index_plus_height
+    @index_plus_height ||= index + height
+  end
 end
 
-# puts h.inspect
+people = a.map.with_index(1) { |height, i| Person.new(i, height) }
+
+h_index_minus_height = Hash.new
+h_index_plus_height = Hash.new
+
+people.each do |person|
+  h_index_minus_height[person.index_minus_height] ||= []
+  h_index_plus_height[person.index_plus_height] ||= []
+
+  h_index_minus_height[person.index_minus_height].push(person)
+  h_index_plus_height[person.index_plus_height].push(person)
+end
 
 count = 0
 
-h.keys.sort.each do |height|
-  ids = h[height]
-  h.each do |k, ids_of_another_height|
-    next if k < height
-
-    sum = height + k
-    ids_of_another_height.each do |id_of_another_height|
-      ids.each do |id|
-        if sum == (id - id_of_another_height).abs && !(k == height && id < id_of_another_height)
-          # puts "id: #{id} (height: #{height}), id: #{id_of_another_height} (height: #{k}), abs of diff: #{(id - id_of_another_height).abs}, sum: #{sum}"
-          count += 1
-        end
-      end
-    end
-  end
+h_index_minus_height.each do |index_minus_height, people_from_index_minus_height|
+  people_from_index_plus_height = h_index_plus_height[index_minus_height]
+  next if people_from_index_plus_height.nil?
+  people_in_both_array = people_from_index_minus_height & people_from_index_plus_height
+  count += people_from_index_minus_height.size * people_from_index_plus_height.size - people_in_both_array.size
 end
 
 puts count
