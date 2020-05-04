@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12832732
+# https://atcoder.jp/contests/past202004-open/submissions/12832802
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -22,6 +22,13 @@ class Memo
   attr_accessor :x
 end
 
+def find_index(memos, d2)
+  (0..(memos.size - 1)).bsearch { |k|
+    memo = memos[k]
+    d2 < memo.l
+  }
+end
+
 queries.each do |query|
   t, a, b = query
 
@@ -35,10 +42,7 @@ queries.each do |query|
     d = a.to_i
     d2 = [d + removed, s].min
 
-    j = (0..(memos.size - 1)).bsearch { |k|
-      memo = memos[k]
-      d2 < memo.l
-    }
+    j = find_index(memos, d2)
 
     cs = {}
 
