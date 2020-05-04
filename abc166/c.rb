@@ -2,27 +2,41 @@
 # https://atcoder.jp/contests/abc166/tasks/abc166_c
 
 # AC
-# https://atcoder.jp/contests/abc166/submissions/12734721
+# https://atcoder.jp/contests/abc166/submissions/12807993
 
 n, m = gets.split(/ /).map(&:to_i)
 h = gets.split(/ /).map(&:to_i)
 ab_s = Array.new(m) { gets.split(/ /).map(&:to_i) }
 
-ab_h = Hash.new
-ab_s.each do |ab|
-  a, b = ab
-  ab_h[a] ||= []
-  ab_h[b] ||= []
-  ab_h[a].push(b)
-  ab_h[b].push(a)
-end
+class Observatory
+  def initialize(index, height)
+    @index = index
+    @height = height
 
-count = 0
-h.each.with_index(1) do |observatory, i|
-  other_observatories_ids = ab_h[i]
-  if other_observatories_ids.nil? || other_observatories_ids.map { |id| h[id - 1] }.all? { |height| height < observatory }
-    count += 1
+    @connected_observatories = []
+  end
+
+  attr_reader :height, :connected_observatories
+
+  def connect_to(observatory)
+    connected_observatories.push(observatory)
+  end
+
+  def good?
+    connected_observatories.empty? || connected_observatories.all? { |observatory| height > observatory.height }
   end
 end
 
-puts count
+observatories = h.map.with_index(1) { |height, i| Observatory.new(i, height) }
+
+ab_s.each do |ab|
+  a, b = ab
+
+  observatory_a = observatories[a - 1]
+  observatory_b = observatories[b - 1]
+
+  observatory_a.connect_to(observatory_b)
+  observatory_b.connect_to(observatory_a)
+end
+
+puts observatories.select(&:good?).size
