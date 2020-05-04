@@ -2,29 +2,38 @@
 # https://atcoder.jp/contests/abc166/tasks/abc166_c
 
 # AC
-# https://atcoder.jp/contests/abc166/submissions/12808506
+# https://atcoder.jp/contests/abc166/submissions/12808642
 
 n, m = read_line.split.map(&.to_i64)
 h = read_line.split.map(&.to_i64)
 ab_s = Array.new(m) { read_line.split.map(&.to_i64) }
 
-ab_h = Hash(Int64, Array(Int64)).new { [] of Int64 }
-ab_s.each do |ab|
-  a, b = ab
-  ab_h[a] = ab_h[a].push(b) # ab_h[a].push(b) は不可
-  ab_h[b] = ab_h[b].push(a)
-end
+class Observatory
+  def initialize(@index : Int64, @height : Int64)
+    @connected_observatories = [] of Observatory
+  end
 
-count = 0
-h.each_with_index(1) do |observatory, i|
-  if ab_h.has_key?(i)
-    other_observatories_ids = ab_h[i]
-    if other_observatories_ids.map { |id| h[id - 1] }.all? { |height| height < observatory }
-      count += 1
-    end
-  else
-    count += 1
+  getter :height, :connected_observatories, :connected_observatories
+
+  def connect_to(observatory : Observatory)
+    connected_observatories.push(observatory)
+  end
+
+  def good?
+    connected_observatories.empty? || connected_observatories.all? { |observatory| height > observatory.height }
   end
 end
 
-puts count
+observatories = h.map_with_index(1) { |height, i| Observatory.new(i.to_i64, height) }
+
+ab_s.each do |ab|
+  a, b = ab
+
+  observatory_a = observatories[a - 1]
+  observatory_b = observatories[b - 1]
+
+  observatory_a.connect_to(observatory_b)
+  observatory_b.connect_to(observatory_a)
+end
+
+puts observatories.select(&.good?).size
