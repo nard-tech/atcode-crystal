@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_f
 
 # TLE
-# https://atcoder.jp/contests/past202004-open/submissions/12819608
+# https://atcoder.jp/contests/past202004-open/submissions/12819721
 
 n = gets.chomp.to_i
 ab_s = Array.new(n) { gets.chomp.split.map(&:to_i) }
@@ -16,14 +16,14 @@ class Task
   attr_reader :begin_at_or_after, :point
 end
 
-tasks = ab_s.map { |a, b| Task.new(a, b) }.sort_by(&:point).reverse
+tasks = ab_s.sort_by(&:last).reverse
 schedule = Array.new(n) { nil }
 
 tasks.each do |task|
-  if schedule[task.begin_at_or_after - 1].nil?
-    schedule[task.begin_at_or_after - 1] = task
+  if schedule[task.first - 1].nil?
+    schedule[task.first - 1] = task
   else
-    day_index = task.begin_at_or_after - 1
+    day_index = task.first - 1
     while !schedule[day_index].nil?
       day_index += 1
     end
@@ -34,9 +34,9 @@ end
 results = []
 schedule.each do |task|
   if results.empty?
-    results.push(task.point)
+    results.push(task.last)
   else
-    results.push(results.last + task.point)
+    results.push(results.last + task.last)
   end
 end
 
