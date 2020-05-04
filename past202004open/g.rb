@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12832802
+# https://atcoder.jp/contests/past202004-open/submissions/12832858
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -46,7 +46,7 @@ queries.each do |query|
 
     cs = {}
 
-    last_index = j || memos.size
+    last_index = j.nil? ? memos.size : j
     memos.slice!(0...last_index).each do |memo|
       c = memo.c
       cs[c] ||= 0
