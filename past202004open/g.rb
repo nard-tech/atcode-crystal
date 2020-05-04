@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12833036
+# https://atcoder.jp/contests/past202004-open/submissions/12833215
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -20,6 +20,15 @@ class Memo
 
   attr_reader :c, :l
   attr_accessor :x
+
+  def process(cs, d2)
+    tmp = l - d2
+
+    cs[c] ||= 0
+    cs[c] += (x - tmp)
+
+    self.x = tmp
+  end
 end
 
 def find_index(memos, d2)
@@ -42,19 +51,6 @@ def process_cs(memos, j)
   h
 end
 
-def process_first_memo(memos, cs, d2)
-  memo = memos[0]
-
-  c, x = memo.c, memo.x
-
-  tmp = memo.l - d2
-
-  cs[c] ||= 0
-  cs[c] += (x - tmp)
-
-  memo.x = tmp
-end
-
 queries.each do |query|
   t, a, b = query
 
@@ -71,7 +67,10 @@ queries.each do |query|
     j = find_index(memos, d2)
     cs = process_cs(memos, j)
 
-    process_first_memo(memos, cs, d2) if j
+    if j
+      memo = memos[0]
+      memo.process(cs, d2)
+    end
 
     removed += cs.values.reduce(0, :+)
 
