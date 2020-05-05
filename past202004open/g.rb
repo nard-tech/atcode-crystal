@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12846972
+# https://atcoder.jp/contests/past202004-open/submissions/12847743
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -21,8 +21,8 @@ class Type1
   attr_reader :char, :to
   attr_accessor :n_active_chars
 
-  def process(dict, d_actualy_removed)
-    tmp = to - d_actualy_removed
+  def process(dict, active_from_after_query_executed)
+    tmp = to - active_from_after_query_executed
     dict.add(char, n_active_chars - tmp)
     self.n_active_chars = tmp
   end
@@ -79,16 +79,16 @@ queries.each do |query|
   else
     d = a.to_i
 
-    last_position_of_actualy_removed = [d + active_from, string_length].min
+    active_from_after_query_executed = [d + active_from, string_length].min
 
     j = memos.bsearch_index { |memo|
-      !memo.within?(last_position_of_actualy_removed)
+      !memo.within?(active_from_after_query_executed)
     }
     dict = Dictionary.generate(memos, j)
 
     if j
       memo = memos[0]
-      memo.process(dict, last_position_of_actualy_removed)
+      memo.process(dict, active_from_after_query_executed)
     end
 
     active_from += dict.string_length
