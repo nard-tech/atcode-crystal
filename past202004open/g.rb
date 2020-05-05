@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12833410
+# https://atcoder.jp/contests/past202004-open/submissions/12844934
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -34,7 +34,7 @@ end
 def find_index(memos, d2)
   (0..(memos.size - 1)).bsearch { |k|
     memo = memos[k]
-    d2 < memo.l
+    memo.l > d2
   }
 end
 
