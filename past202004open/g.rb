@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12845421
+# https://atcoder.jp/contests/past202004-open/submissions/12845522
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -12,22 +12,22 @@ string_length = 0
 string_length_already_removed = 0
 
 class Memo
-  def initialize(char, x, string_length)
+  def initialize(char, n_added_chars, string_length)
     @char = char
-    @x = x
+    @n_added_chars = n_added_chars
     @string_length = string_length
   end
 
   attr_reader :char, :string_length
-  attr_accessor :x
+  attr_accessor :n_added_chars
 
   def process(cs, d_actualy_removed)
     tmp = string_length - d_actualy_removed
 
     cs[char] ||= 0
-    cs[char] += (x - tmp)
+    cs[char] += (n_added_chars - tmp)
 
-    self.x = tmp
+    self.n_added_chars = tmp
   end
 end
 
@@ -45,7 +45,7 @@ def generate_cs(memos, j)
   memos.slice!(0...last_index).each do |memo|
     char = memo.char
     h[char] ||= 0
-    h[char] += memo.x
+    h[char] += memo.n_added_chars
   end
 
   h
@@ -56,10 +56,10 @@ queries.each do |query|
 
   if t == "1"
     char = a
-    x = b.to_i
+    n_added_chars = b.to_i
 
-    string_length += x
-    memos << Memo.new(char, x, string_length)
+    string_length += n_added_chars
+    memos << Memo.new(char, n_added_chars, string_length)
   else
     d = a.to_i
 
