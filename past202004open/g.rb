@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12845736
+# https://atcoder.jp/contests/past202004-open/submissions/12845911
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -31,10 +31,10 @@ class Type1
   end
 end
 
-def find_index(memos, d_actualy_removed)
+def find_index(memos, last_position_of_actualy_removed)
   (0..(memos.size - 1)).bsearch { |k|
     memo = memos[k]
-    memo.string_length > d_actualy_removed
+    memo.string_length > last_position_of_actualy_removed
   }
 end
 
@@ -63,14 +63,14 @@ queries.each do |query|
   else
     d = a.to_i
 
-    d_actualy_removed = [d + string_length_already_removed, string_length].min
+    last_position_of_actualy_removed = [d + string_length_already_removed, string_length].min
 
-    j = find_index(memos, d_actualy_removed)
+    j = find_index(memos, last_position_of_actualy_removed)
     cs = generate_cs(memos, j)
 
     if j
       memo = memos[0]
-      memo.process(cs, d_actualy_removed)
+      memo.process(cs, last_position_of_actualy_removed)
     end
 
     string_length_already_removed += cs.values.reduce(0, :+)
