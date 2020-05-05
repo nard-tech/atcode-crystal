@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12847743
+# https://atcoder.jp/contests/past202004-open/submissions/12848331
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -12,23 +12,24 @@ string_length = 0
 active_from = 0
 
 class Type1
-  def initialize(char, n_active_chars, to)
+  def initialize(char, x, from)
     @char = char
-    @n_active_chars = n_active_chars
-    @to = to
+    @n_active_chars = x
+    @from = from
+    @to = from + x - 1
   end
 
-  attr_reader :char, :to
+  attr_reader :char, :from, :to
   attr_accessor :n_active_chars
 
   def process(dict, active_from_after_query_executed)
-    tmp = to - active_from_after_query_executed
-    dict.add(char, n_active_chars - tmp)
-    self.n_active_chars = tmp
+    n_rest_active_chars = to - (active_from_after_query_executed - 1)
+    dict.add(char, n_active_chars - n_rest_active_chars)
+    self.n_active_chars = n_rest_active_chars
   end
 
   def within?(n)
-    to <= n
+    to < n
   end
 end
 
@@ -49,17 +50,12 @@ class Dictionary
   end
 
   def register(memo)
-    char = memo.char
-    add(char, memo.n_active_chars)
+    add(memo.char, memo.n_active_chars)
   end
 
   def add(char, n)
     @h[char] ||= 0
     @h[char] += n
-  end
-
-  def string_length
-    @h.values.reduce(0, :+)
   end
 
   def sum_of_square_index
@@ -74,11 +70,13 @@ queries.each do |query|
     char = a
     x = b.to_i
 
-    string_length += x
     memos << Type1.new(char, x, string_length)
+    string_length += x
   else
     d = a.to_i
 
+    # クエリ実行の結果空文字列ができる場合は
+    # active_from_after_query_executed == string_length
     active_from_after_query_executed = [d + active_from, string_length].min
 
     j = memos.bsearch_index { |memo|
@@ -91,7 +89,7 @@ queries.each do |query|
       memo.process(dict, active_from_after_query_executed)
     end
 
-    active_from += dict.string_length
+    active_from = active_from_after_query_executed
 
     puts dict.sum_of_square_index
   end
