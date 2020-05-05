@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12845911
+# https://atcoder.jp/contests/past202004-open/submissions/12846227
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -21,12 +21,9 @@ class Type1
   attr_reader :char, :string_length
   attr_accessor :n_active_chars
 
-  def process(cs, d_actualy_removed)
+  def process(dict, d_actualy_removed)
     tmp = string_length - d_actualy_removed
-
-    cs[char] ||= 0
-    cs[char] += (n_active_chars - tmp)
-
+    dict.update(char, n_active_chars - tmp)
     self.n_active_chars = tmp
   end
 end
@@ -38,17 +35,39 @@ def find_index(memos, last_position_of_actualy_removed)
   }
 end
 
-def generate_cs(memos, j)
-  h = {}
+class Dictionary
+  def self.generate(memos, j)
+    dict = new
 
-  last_index = j.nil? ? memos.size : j
-  memos.slice!(0...last_index).each do |memo|
-    char = memo.char
-    h[char] ||= 0
-    h[char] += memo.n_active_chars
+    last_index = j.nil? ? memos.size : j
+    memos.slice!(0...last_index).each do |memo|
+      dict.register(memo)
+    end
+
+    dict
   end
 
-  h
+  def initialize
+    @h = {}
+  end
+
+  def register(memo)
+    char = memo.char
+    update(char, memo.n_active_chars)
+  end
+
+  def update(char, n)
+    @h[char] ||= 0
+    @h[char] += n
+  end
+
+  def string_length
+    @h.values.reduce(0, :+)
+  end
+
+  def sum_of_square_index
+    @h.values.reduce(0) { |a, b| a + (b ** 2) }
+  end
 end
 
 queries.each do |query|
@@ -66,15 +85,15 @@ queries.each do |query|
     last_position_of_actualy_removed = [d + string_length_already_removed, string_length].min
 
     j = find_index(memos, last_position_of_actualy_removed)
-    cs = generate_cs(memos, j)
+    dict = Dictionary.generate(memos, j)
 
     if j
       memo = memos[0]
-      memo.process(cs, last_position_of_actualy_removed)
+      memo.process(dict, last_position_of_actualy_removed)
     end
 
-    string_length_already_removed += cs.values.reduce(0, :+)
+    string_length_already_removed += dict.string_length
 
-    puts cs.values.reduce(0) { |a, b| a + (b ** 2) }
+    puts dict.sum_of_square_index
   end
 end
