@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12846227
+# https://atcoder.jp/contests/past202004-open/submissions/12846565
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
@@ -26,13 +26,10 @@ class Type1
     dict.update(char, n_active_chars - tmp)
     self.n_active_chars = tmp
   end
-end
 
-def find_index(memos, last_position_of_actualy_removed)
-  (0..(memos.size - 1)).bsearch { |k|
-    memo = memos[k]
-    memo.string_length > last_position_of_actualy_removed
-  }
+  def within?(n)
+    string_length <= n
+  end
 end
 
 class Dictionary
@@ -84,7 +81,9 @@ queries.each do |query|
 
     last_position_of_actualy_removed = [d + string_length_already_removed, string_length].min
 
-    j = find_index(memos, last_position_of_actualy_removed)
+    j = memos.bsearch_index { |memo|
+      !memo.within?(last_position_of_actualy_removed)
+    }
     dict = Dictionary.generate(memos, j)
 
     if j
