@@ -2,14 +2,14 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12845051
+# https://atcoder.jp/contests/past202004-open/submissions/12845299
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
 
 memos = []
 string_length = 0
-removed = 0
+string_length_already_removed = 0
 
 class Memo
   def initialize(c, x, string_length)
@@ -21,8 +21,8 @@ class Memo
   attr_reader :c, :string_length
   attr_accessor :x
 
-  def process(cs, d2)
-    tmp = string_length - d2
+  def process(cs, d_actualy_removed)
+    tmp = string_length - d_actualy_removed
 
     cs[c] ||= 0
     cs[c] += (x - tmp)
@@ -31,10 +31,10 @@ class Memo
   end
 end
 
-def find_index(memos, d2)
+def find_index(memos, d_actualy_removed)
   (0..(memos.size - 1)).bsearch { |k|
     memo = memos[k]
-    memo.string_length > d2
+    memo.string_length > d_actualy_removed
   }
 end
 
@@ -62,17 +62,18 @@ queries.each do |query|
     memos << Memo.new(c, x, string_length)
   else
     d = a.to_i
-    d2 = [d + removed, string_length].min
 
-    j = find_index(memos, d2)
+    d_actualy_removed = [d + string_length_already_removed, string_length].min
+
+    j = find_index(memos, d_actualy_removed)
     cs = generate_cs(memos, j)
 
     if j
       memo = memos[0]
-      memo.process(cs, d2)
+      memo.process(cs, d_actualy_removed)
     end
 
-    removed += cs.values.reduce(0, :+)
+    string_length_already_removed += cs.values.reduce(0, :+)
 
     puts cs.values.reduce(0) { |a, b| a + (b ** 2) }
   end
