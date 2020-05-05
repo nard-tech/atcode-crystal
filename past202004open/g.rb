@@ -2,27 +2,27 @@
 # https://atcoder.jp/contests/past202004-open/tasks/past202004_g
 
 # AC
-# https://atcoder.jp/contests/past202004-open/submissions/12844934
+# https://atcoder.jp/contests/past202004-open/submissions/12845051
 
 q = gets.to_i
 queries = Array.new(q) { gets.chomp.split(/ /) }
 
 memos = []
-s = 0
+string_length = 0
 removed = 0
 
 class Memo
-  def initialize(c, x, l)
+  def initialize(c, x, string_length)
     @c = c
     @x = x
-    @l = l
+    @string_length = string_length
   end
 
-  attr_reader :c, :l
+  attr_reader :c, :string_length
   attr_accessor :x
 
   def process(cs, d2)
-    tmp = l - d2
+    tmp = string_length - d2
 
     cs[c] ||= 0
     cs[c] += (x - tmp)
@@ -34,7 +34,7 @@ end
 def find_index(memos, d2)
   (0..(memos.size - 1)).bsearch { |k|
     memo = memos[k]
-    memo.l > d2
+    memo.string_length > d2
   }
 end
 
@@ -58,11 +58,11 @@ queries.each do |query|
     c = a
     x = b.to_i
 
-    s += x
-    memos << Memo.new(c, x, s)
+    string_length += x
+    memos << Memo.new(c, x, string_length)
   else
     d = a.to_i
-    d2 = [d + removed, s].min
+    d2 = [d + removed, string_length].min
 
     j = find_index(memos, d2)
     cs = generate_cs(memos, j)
