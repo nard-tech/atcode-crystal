@@ -2,40 +2,21 @@
 # https://atcoder.jp/contests/abc144/tasks/abc144_c
 
 # TLE
-# https://atcoder.jp/contests/abc144/submissions/12895530
-
-require 'prime'
+# https://atcoder.jp/contests/abc144/submissions/12895628
 
 n = gets.chomp.to_i
+divisors = []
 
-def divisors(x)
-  list = [1]
-  primes = []
-
-  Prime.prime_division(x).each do |prime|
-    base, power = prime
-    power.times do
-      primes << base
-    end
+(1..(Math.sqrt(n))).each do |i|
+  div, mod = n.divmod(i)
+  if mod == 0
+    divisors.push(div)
   end
-
-  1.upto(primes.size) do |i|
-    primes.combination(i).to_a.uniq do |prime|
-      list << prime.inject(:*)
-    end
-  end
-
-  list.sort!
-
-  return list
 end
 
-result = 10**12 + 1
-divisors = divisors(n)
+result = Float::INFINITY
 
-# puts divisors
-
-divisors.select { |i| i <= n / 2 }.each do |divisor|
+divisors.each do |divisor|
   another_divisor = n / divisor
   i = divisor + another_divisor
   if result > i
