@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/abc144/tasks/abc144_c
 
 # TLE
-# https://atcoder.jp/contests/abc144/submissions/12895361
+# https://atcoder.jp/contests/abc144/submissions/12895396
 
 require 'prime'
 
@@ -34,7 +34,7 @@ divisors = divisors(n)
 
 # puts divisors
 
-divisors.each do |divisor|
+divisors.select { |i| i <= n / 2 }.each do |divisor|
   another_divisor = n / divisor
   i = divisor + another_divisor
   if result > i
