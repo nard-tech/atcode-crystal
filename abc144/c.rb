@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/abc144/tasks/abc144_c
 
 # TLE
-# https://atcoder.jp/contests/abc144/submissions/12895396
+# https://atcoder.jp/contests/abc144/submissions/12895530
 
 require 'prime'
 
@@ -13,19 +13,20 @@ def divisors(x)
   primes = []
 
   Prime.prime_division(x).each do |prime|
-    prime[1].times do
-      primes << prime[0]
+    base, power = prime
+    power.times do
+      primes << base
     end
   end
 
   1.upto(primes.size) do |i|
-    primes.combination(i) do |prime|
+    primes.combination(i).to_a.uniq do |prime|
       list << prime.inject(:*)
     end
   end
 
-  list.uniq!
   list.sort!
+
   return list
 end
 
