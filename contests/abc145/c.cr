@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/abc145/tasks/abc145_c
 
 # AC
-# https://atcoder.jp/contests/abc145/submissions/12949971
+# https://atcoder.jp/contests/abc145/submissions/12952119
 
 n = read_line.to_i64
 xy_s = Array.new(n) { read_line.split.map(&.to_i64) }
@@ -24,12 +24,10 @@ sum = 0
 permutation = points.each_permutation.to_a
 
 permutation.to_a.each do |points_in_permutation|
-  length = 0
-  points_in_permutation.each_cons(2) do |group|
+  sum += points_in_permutation.each_cons(2).map { |group|
     a, b = group
-    length += a.from(b)
-  end
-  sum += length
+    a.from(b)
+  }.sum
 end
 
 puts sum * 1.0 / permutation.size
