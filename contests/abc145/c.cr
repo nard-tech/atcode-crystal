@@ -23,7 +23,7 @@ points = xy_s.map { |xy| x, y = xy; Point.new(x, y) }
 sum = 0
 permutation = points.each_permutation.to_a
 
-permutation.to_a.each do |points_in_permutation|
+permutation.each do |points_in_permutation|
   sum += points_in_permutation.each_cons(2).map { |group|
     a, b = group
     a.from(b)
