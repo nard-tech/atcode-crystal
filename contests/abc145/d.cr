@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/abc145/tasks/abc145_d
 
 # AC
-# https://atcoder.jp/contests/abc145/submissions/12951655
+# https://atcoder.jp/contests/abc145/submissions/12951956
 
 x, y = read_line.split.map(&.to_i64)
 
@@ -13,68 +13,77 @@ class Factorial
 
   def initialize(@max : Int64, @mod : Int64 | Nil)
     @array = [] of Int64
-
-    @array.push(1_i64) # 0
-    @array.push(1_i64) # 1
-
-    if max >= 2
-      2_i64.upto(max) do |i|
-        f = @array.last * i
-        f = f % mod unless mod.nil?
-        @array.push(f)
-      end
-    end
+    set_up
   end
 
   getter :max, :mod, array : Array(Int64)
 
   def get(n : Int64) : Int64
     raise "ArgumentError" if n > max
-    @array[n]
+    array[n]
+  end
+
+  private def set_up
+    array.push(1_i64) # 0
+    array.push(1_i64) # 1
+
+    if max >= 2
+      2_i64.upto(max) do |i|
+        f = array.last * i
+        f = f % mod.as(Int64) unless mod.nil?
+        array.push(f)
+      end
+    end
   end
 end
 
 class Inverse
   def initialize(@max : Int64, @mod : Int64)
     @array = [] of Int64 | Nil
+    set_up
+  end
 
-    @array.push(nil)   # 0
-    @array.push(1_i64) # 1
+  getter :max, :mod, array : Array(Int64 | Nil)
+
+  def get(n : Int64) : Int64 | Nil
+    array[n]
+  end
+
+  private def set_up
+    array.push(nil)   # 0
+    array.push(1_i64) # 1
 
     if max >= 2
       2_i64.upto(max) do |i|
-        inv = mod - @array[mod % i].as(Int64) * (mod / i) % mod
-        @array.push(inv)
+        inv = mod - array[mod % i].as(Int64) * (mod / i) % mod
+        array.push(inv)
       end
     end
-  end
-
-  getter :max, :mod
-
-  def get(n : Int64) : Int64 | Nil
-    @array[n]
   end
 end
 
 class FactorialInverse
   def initialize(@max : Int64, @inverse : Inverse, @mod : Int64)
     @array = [] of Int64
-
-    @array.push(1_i64) # 0
-    @array.push(1_i64) # 1
-
-    if max >= 2
-      2_i64.upto(max) do |i|
-        finv = @array.last * inverse.get(i).as(Int64) % mod
-        @array.push(finv)
-      end
-    end
+    set_up
   end
 
-  getter :max, :inverse, :mod
+  getter :max, :inverse, :mod, array : Array(Int64)
 
   def get(n : Int64) : Int64
     @array[n]
+  end
+
+  private def set_up
+    array.push(1_i64) # 0
+    array.push(1_i64) # 1
+
+    if max >= 2
+      2_i64.upto(max) do |i|
+        finv = array.last * inverse.get(i).as(Int64) % mod
+        array.push(finv)
+      end
+    end
   end
 end
 
@@ -88,6 +97,7 @@ class Combination
       factorial = Factorial.new(n, mod)
       inverse = Inverse.new(n, mod)
       factorial_inverse = FactorialInverse.new(n, inverse, mod)
+
       factorial.get(n) * (factorial_inverse.get(k) * factorial_inverse.get(n - k) % mod) % mod
     end
   end
