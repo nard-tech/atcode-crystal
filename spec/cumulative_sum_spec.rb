@@ -1,4 +1,4 @@
-require_relative './../../_algorithm/cumulative_sum'
+require_relative './../lib/cumulative_sum'
 
 describe CumulativeSum do
   describe '#calc' do

@@ -1,5 +1,5 @@
 require "spec"
-require "./../../_algorithm/cumulative_sum"
+require "./../lib/cumulative_sum"
 
 describe CumulativeSum do
   describe "#calc" do
