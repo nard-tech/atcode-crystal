@@ -1,8 +1,8 @@
 # ABC 167 D - Teleporter
 # https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_d
 
-# TLE, WA
-# https://atcoder.jp/contests/abc167/submissions/13063999
+# TLE
+# https://atcoder.jp/contests/abc167/submissions/13071065
 
 n, k = read_line.split.map(&.to_i64)
 a = read_line.split.map(&.to_i64)
@@ -33,7 +33,7 @@ class Teleporation
       circulated = teleportation
     else
       appendix = teleportation[0..(i - 1)]
-      circulated = teleportation[1..-1]
+      circulated = teleportation[i..-1]
     end
 
     new(appendix, circulated, stop_at)
@@ -44,20 +44,16 @@ class Teleporation
 
   getter :appendix, :circulated, :stop_at
 
-  def get(i : Int64)
-    if i < appendix.size
-      appendix[i - 1]
-    else
-      i -= appendix.size
-      if i < circulated.size
-        circulated[i - 1]
-      elsif !stop_at.nil?
-        stop_at
-      else
-        n = i % circulated.size
-        circulated[n - 1]
-      end
-    end
+  def get(k : Int64)
+    return appendix[k - 1] if k < appendix.size
+
+    k -= appendix.size
+
+    return circulated[k - 1] if k < circulated.size
+    return stop_at unless stop_at.nil?
+
+    n = k % circulated.size
+    circulated[n - 1]
   end
 end
 
