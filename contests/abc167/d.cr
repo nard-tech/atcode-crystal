@@ -1,8 +1,8 @@
 # ABC 167 D - Teleporter
 # https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_d
 
-# TLE
-# https://atcoder.jp/contests/abc167/submissions/13071065
+# AC
+# https://atcoder.jp/contests/abc167/submissions/13072697
 
 n, k = read_line.split.map(&.to_i64)
 a = read_line.split.map(&.to_i64)
@@ -15,9 +15,11 @@ class Teleporation
     next_town = a[current_town - 1]
     stop_at = nil
 
-    while !teleportation.includes?(next_town)
+    h = Hash(Int64, Bool).new { false }
+    while !h[next_town]
       # puts "#{current_town} -> #{next_town}"
       teleportation.push(next_town)
+      h[next_town] = true
 
       current_town = next_town
       next_town = a[current_town - 1]
