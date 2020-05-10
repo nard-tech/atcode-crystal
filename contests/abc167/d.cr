@@ -47,11 +47,11 @@ class Teleporation
   getter :appendix, :circulated, :stop_at
 
   def get(k : Int64)
-    return appendix[k - 1] if k < appendix.size
+    return appendix[k - 1] if k <= appendix.size
 
     k -= appendix.size
 
-    return circulated[k - 1] if k < circulated.size
+    return circulated[k - 1] if k <= circulated.size
     return stop_at unless stop_at.nil?
 
     n = k % circulated.size
