@@ -34,6 +34,10 @@ class Factorial
     array[n]
   end
 
+  def get(n : Int32) : Int64
+    get(n.to_i64)
+  end
+
   private def set_up
     array.push(1_i64) # 0
     array.push(1_i64) # 1
@@ -81,6 +85,10 @@ class Inverse
   # @return [Int64] n の逆元
   def get(n : Int64) : Int64 | Nil
     array[n]
+  end
+
+  def get(n : Int32) : Int64 | Nil
+    get(n.to_i64)
   end
 
   private def set_up
@@ -136,6 +144,10 @@ class FactorialInverse
   # @return [Int64] 階乗の逆元
   def get(n : Int64) : Int64
     @array[n]
+  end
+
+  def get(n : Int32) : Int64
+    get(n.to_i64)
   end
 
   private def set_up
@@ -200,5 +212,9 @@ class Combination
     else
       factorial.get(n) * (factorial_inverse.get(k) * factorial_inverse.get(n - k) % mod) % mod
     end
+  end
+
+  def get(n : Int32, k : Int64)
+    get(n.to_i64, k.to_i64)
   end
 end
