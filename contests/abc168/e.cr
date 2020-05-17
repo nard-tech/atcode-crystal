@@ -1,11 +1,11 @@
-# ABC 168 E - ∙ (Bullet)
+# ABC 168 E
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # RE, WA
-# https://atcoder.jp/contests/abc168/submissions/13337072
+# https://atcoder.jp/contests/abc168/submissions/13337556
 
-# RE: sub1_01, sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_17, sub1_19, sub1_20, sub1_21
-# WA: sub1_18
+# RE: sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_21
+# WA: sub1_17, sub1_18
 
 n = read_line.to_i64
 
@@ -75,9 +75,9 @@ end
 
 mod = 1000000007_i64
 combination_calculator = Combination.generate(n, mod)
-puts count_combination(combination_calculator, sardine_groups) - 1
+puts count_combination(combination_calculator, sardine_groups, mod) - 1
 
-def count_combination(combination_calculator, sardine_groups)
+def count_combination(combination_calculator, sardine_groups, mod)
   i = 1_i64
 
   sardine_groups.each do |basis_vector, sardine_group|
@@ -89,6 +89,7 @@ def count_combination(combination_calculator, sardine_groups)
     if sardine_group.invalid_group.nil?
       # puts "sardines_size: #{sardines_size}, j: #{j}"
       i *= j
+      i %= mod
       next
     end
 
@@ -98,6 +99,7 @@ def count_combination(combination_calculator, sardine_groups)
 
     # puts "j + k: #{j} + #{k}"
     i *= (j + k - 1)
+    i %= mod
 
     invalid_group.checked = true
   end
