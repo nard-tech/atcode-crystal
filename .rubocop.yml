@@ -21,3 +21,5 @@ Style/AsciiComments:
   Enabled: false
 Lint/RaiseException:
   Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
