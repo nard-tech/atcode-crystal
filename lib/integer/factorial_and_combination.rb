@@ -46,12 +46,12 @@ class Factorial
     array.push(1) # 0
     array.push(1) # 1
 
-    if max >= 2
-      2.upto(max) do |i|
-        f = array.last * i
-        f = f % mod unless mod.nil?
-        array.push(f)
-      end
+    return unless max >= 2
+
+    2.upto(max) do |i|
+      f = array.last * i
+      f = f % mod unless mod.nil?
+      array.push(f)
     end
   end
 end
@@ -102,11 +102,11 @@ class Inverse
     array.push(nil) # 0
     array.push(1)   # 1
 
-    if max >= 2
-      2.upto(max) do |i|
-        inv = mod - array[mod % i] * (mod / i) % mod
-        array.push(inv)
-      end
+    return unless max >= 2
+
+    2.upto(max) do |i|
+      inv = mod - array[mod % i] * (mod / i) % mod
+      array.push(inv)
     end
   end
 end
@@ -160,11 +160,11 @@ class FactorialInverse
     array.push(1) # 0
     array.push(1) # 1
 
-    if max >= 2
-      2.upto(max) do |i|
-        finv = array.last * inverse.get(i) % mod
-        array.push(finv)
-      end
+    return unless max >= 2
+
+    2.upto(max) do |i|
+      finv = array.last * inverse.get(i) % mod
+      array.push(finv)
     end
   end
 end
