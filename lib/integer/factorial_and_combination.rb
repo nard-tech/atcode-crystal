@@ -36,6 +36,7 @@ class Factorial
   # @return [Integer] n の階乗
   def get(n)
     raise ArgumentError if n > max
+
     @array[n]
   end
 
