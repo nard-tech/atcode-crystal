@@ -2,10 +2,10 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # RE, WA
-# https://atcoder.jp/contests/abc168/submissions/13351761
+# https://atcoder.jp/contests/abc168/submissions/13352880
 
-# RE: sub1_15, sub1_16
-# WA: sub1_11, sub1_12, sub1_13, sub1_14
+# RE: sub1_16
+# WA: sub1_11, sub1_12, sub1_13, sub1_14, sub1_15
 
 n = read_line.to_i64
 
@@ -22,8 +22,8 @@ class Sardine
   end
 
   def basis_vector : Array(Int64)
-    if gcd == 0
-      return [0_i64, 0_i64]
+    if to_a.any?(&.zero?)
+      return to_a
     end
 
     a = to_a.map { |i| i // gcd }
