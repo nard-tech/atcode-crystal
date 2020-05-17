@@ -1,46 +1,76 @@
+# frozen_string_literal: true
+
 class CumulativeCalculation
-  def self.calc(array, &block)
-    new(array).calc(&block)
+  def self.generate(array, &block)
+    block = block_given? ? block : nil
+    new(array, block)
   end
 
-  def initialize(array, begin_with, operator)
-    @array = array
-    @begin_with = begin_with
-    @operator = operator
-  end
-
-  attr_reader :array, :begin_with, :operator
-
-  class << self
-    private :new
-  end
-
-  def calc
-    cumulative_sums = []
-    cumulative_sums.push(begin_with)
-
-    if block_given?
-      array.each do |i|
-        cumulative_sums.push(yield(cumulative_sums.last, i))
-      end
-    else
-      array.each do |i|
-        cumulative_sums.push(cumulative_sums.last.send(operator, i))
-      end
+  def initialize(array, first_element, operator_for_calc, operator_for_between, block)
+    unless %i[+ *].include?(operator_for_calc)
+      raise ArgumentError, 'operator_for_calc is not valid.'
     end
 
-    cumulative_sums
+    unless %i[- /].include?(operator_for_between)
+      raise ArgumentError, 'operator_for_between is not valid.'
+    end
+
+    @array = array
+    @first_element = first_element
+    @operator_for_calc = operator_for_calc
+    @operator_for_between = operator_for_between
+    @result = calc(array, block)
+  end
+
+  attr_reader :array
+  attr_reader :first_element, :operator_for_calc, :operator_for_between
+  attr_reader :result
+
+  def between(i, j)
+    unless i <= j
+      raise ArgumentError, 'The second argument should be larger than the first argument.'
+    end
+
+    j_th = result[j + 1]
+    i_th = result[i]
+
+    if block_given?
+      yield(i_th, j_th)
+    else
+      j_th.send(operator_for_between, i_th)
+    end
+  end
+
+  private
+
+  def calc(a, block)
+    result = []
+    result.push(first_element)
+
+    a.each do |i|
+      result.push(next_element(result.last, i, block))
+    end
+
+    result
+  end
+
+  def next_element(last, i, block)
+    if block.nil?
+      last.send(operator_for_calc, i)
+    else
+      block.call(last, i)
+    end
   end
 end
 
 class CumulativeSum < CumulativeCalculation
-  def initialize(array)
-    super(array, 0, :+)
+  def initialize(array, block)
+    super(array, 0, :+, :-, block)
   end
 end
 
 class CumulativeProduct < CumulativeCalculation
-  def initialize(array)
-    super(array, 1, :*)
+  def initialize(array, block)
+    super(array, 1, :*, :/, block)
   end
 end
