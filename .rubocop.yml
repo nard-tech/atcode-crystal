@@ -6,3 +6,5 @@ Layout/ExtraSpacing:
 Layout/SpaceInsideParens:
   Exclude:
     - 'spec/**/**.rb'
+Metrics/AbcSize:
+  Max: 15
