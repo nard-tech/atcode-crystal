@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './../lib/cumulative_sum'
+require_relative './../lib/cumulative_caluculation'
 require_relative './../lib/integer/factorial_and_combination'
 
 def instance_between(instance, i, j, inverse_instance, mod)

@@ -1,5 +1,5 @@
 require "spec"
-require "./../lib/cumulative_sum"
+require "./../lib/cumulative_caluculation"
 
 describe CumulativeSum do
   describe ".generate (class method)" do

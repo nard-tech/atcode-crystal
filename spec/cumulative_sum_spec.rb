@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './../lib/cumulative_sum'
+require_relative './../lib/cumulative_caluculation'
 
 describe CumulativeSum do
   describe '.generate (class method)' do

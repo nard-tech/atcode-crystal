@@ -1,5 +1,5 @@
 require "spec"
-require "./../lib/cumulative_sum"
+require "./../lib/cumulative_caluculation"
 require "./../lib/integer/factorial_and_combination"
 
 def instance_between(instance : CumulativeProduct, i, j, inverse_instance, mod)
