@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # WA
-# https://atcoder.jp/contests/abc168/submissions/13354952
+# https://atcoder.jp/contests/abc168/submissions/13355234
 
 # WA: sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16
 
@@ -26,7 +26,7 @@ class Sardine
     return [1_i64, 0_i64] if to_a.last.zero?
 
     a = to_a.map { |i| i // gcd }
-    if a.first < 0 # [+, -] または [+, +] になるようにする
+    if a.first < 0 # [-, +], [-, -] の形のベクトルは [+, -] または [+, +] になるようにする
       a.map { |i| i * -1 }
     else
       a
@@ -74,8 +74,11 @@ class SardineGroup
   end
 
   private def invalid_size : Int64
-    return 0_i64 if invalid_group.nil?
-    invalid_group.as(SardineGroup).sardines.size.to_i64
+    if invalid_group.nil?
+      0_i64
+    else
+      invalid_group.as(SardineGroup).sardines.size.to_i64
+    end
   end
 
   private def invalid_checked!
