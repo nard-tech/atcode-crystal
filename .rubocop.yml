@@ -17,6 +17,7 @@ Naming/MethodParameterName:
     - k
     - m
     - n
+    - to
 Style/AsciiComments:
   Enabled: false
 Lint/RaiseException:
