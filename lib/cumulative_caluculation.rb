@@ -44,11 +44,11 @@ class CumulativeCalculation
 
   private
 
-  def calc(a, block)
+  def calc(array, block)
     result = []
     result.push(first_element)
 
-    a.each do |i|
+    array.each do |i|
       result.push(next_element(result.last, i, block))
     end
 
