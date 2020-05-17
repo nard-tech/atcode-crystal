@@ -1,10 +1,11 @@
 # ABC 168 E
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# RE
-# https://atcoder.jp/contests/abc168/submissions/13344585
+# RE, WA
+# https://atcoder.jp/contests/abc168/submissions/13351546
 
-# RE: sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_21
+# RE: sub1_15, sub1_16
+# WA: sub1_11, sub1_12, sub1_13, sub1_14
 
 n = read_line.to_i64
 
@@ -16,11 +17,15 @@ class Sardine
   getter :taste, :fragrance
   getter gcd : Int64
 
-  def to_a
+  def to_a : Array(Int64)
     [taste, fragrance]
   end
 
-  def basis_vector
+  def basis_vector : Array(Int64)
+    if gcd == 0
+      return [0_i64, 0_i64]
+    end
+
     a = to_a.map { |i| i // gcd }
     if a.first < 0
       a.map { |i| i * -1 }
@@ -78,7 +83,7 @@ def count_combination(combination_calculator, sardine_groups, mod)
     next if sardine_group.checked == true
     if basis_vector == [0, 0]
       sardines_size = sardine_group.sardines.size.to_i64
-      i *= 2_i64
+      i *= (sardines_size + 1)
       next
     end
 
