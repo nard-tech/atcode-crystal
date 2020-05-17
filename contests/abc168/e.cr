@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # RE
-# https://atcoder.jp/contests/abc168/submissions/13343568
+# https://atcoder.jp/contests/abc168/submissions/13344585
 
 # RE: sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_21
 
@@ -76,6 +76,11 @@ def count_combination(combination_calculator, sardine_groups, mod)
 
   sardine_groups.each do |basis_vector, sardine_group|
     next if sardine_group.checked == true
+    if basis_vector == [0, 0]
+      sardines_size = sardine_group.sardines.size.to_i64
+      i *= 2_i64
+      next
+    end
 
     sardines_size = sardine_group.sardines.size.to_i64
     j = 0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod
