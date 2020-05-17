@@ -1,11 +1,10 @@
 # ABC 168 E
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# RE, WA
-# https://atcoder.jp/contests/abc168/submissions/13338255
+# RE
+# https://atcoder.jp/contests/abc168/submissions/13342975
 
 # RE: sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_21
-# WA: sub1_17, sub1_18
 
 n = read_line.to_i64
 
@@ -47,12 +46,7 @@ class SardineGroup
   end
 end
 
-sardines = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }
-# sardines.each do |sardine|
-#   puts sardine.inspect
-# end
-
-h = sardines.group_by(&.basis_vector)
+h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
 
 sardine_groups = Hash(Array(Int64), SardineGroup).new
 h.each do |basis_vector, sardines|
@@ -75,7 +69,7 @@ end
 
 mod = 1000000007_i64
 combination_calculator = Combination.generate(n, mod)
-puts count_combination(combination_calculator, sardine_groups, mod) - 1_i64
+puts (count_combination(combination_calculator, sardine_groups, mod) - 1_i64) % mod
 
 def count_combination(combination_calculator, sardine_groups, mod)
   i = 1_i64
