@@ -3,3 +3,6 @@ inherit_from: .rubocop_todo.yml
 Layout/ExtraSpacing:
   Exclude:
     - 'spec/**/**.rb'
+Layout/SpaceInsideParens:
+  Exclude:
+    - 'spec/**/**.rb'
