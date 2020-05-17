@@ -7,7 +7,7 @@ def divisors(n)
 
   (1..(Math.sqrt(n))).each do |i|
     div, mod = n.divmod(i)
-    if mod == 0
+    if mod.zero?
       list_a.push(i)
       list_b.push(div)
     end

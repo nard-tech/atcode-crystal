@@ -179,7 +179,7 @@ class Combination
   def self.calc(n, k, mod)
     if n < k
       0
-    elsif n < 0 || k < 0
+    elsif n.negative? || k.negative?
       0
     else
       generate(n, mod).get(n, k)
@@ -218,7 +218,7 @@ class Combination
   def get(n, k)
     if n < k
       0
-    elsif n < 0 || k < 0
+    elsif n.negative? || k.negative?
       0
     else
       factorial.get(n) * (factorial_inverse.get(k) * factorial_inverse.get(n - k) % mod) % mod
