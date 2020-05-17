@@ -17,3 +17,5 @@ Naming/MethodParameterName:
     - k
     - m
     - n
+Style/AsciiComments:
+  Enabled: false
