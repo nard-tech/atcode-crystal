@@ -1,3 +1,4 @@
+# 累積和，累積積の計算を行うためのクラスを定義するマクロ
 macro define_cumulative_calculation_class(class_name, first_element, operator_for_calc, operator_for_between)
   class {{class_name}}(T)
     def self.generate(array : Array(T), &block)
@@ -69,5 +70,8 @@ macro define_cumulative_calculation_class(class_name, first_element, operator_fo
   end
 end
 
+# 累積和の計算を行うためのクラス CumulativeSum を定義する
 define_cumulative_calculation_class(CumulativeSum, 0, :+, :-)
+
+# 累積積の計算を行うためのクラス CumulativeProduct を定義する
 define_cumulative_calculation_class(CumulativeProduct, 1, :*, ://)

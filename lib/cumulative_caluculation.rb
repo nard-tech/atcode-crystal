@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 累積和，累積積の計算を行うための抽象クラス
 class CumulativeCalculation
   def self.generate(array, &block)
     block = block_given? ? block : nil
@@ -63,12 +64,14 @@ class CumulativeCalculation
   end
 end
 
+# 累積和の計算を行うためのクラス
 class CumulativeSum < CumulativeCalculation
   def initialize(array, block)
     super(array, 0, :+, :-, block)
   end
 end
 
+# 累積積の計算を行うためのクラス
 class CumulativeProduct < CumulativeCalculation
   def initialize(array, block)
     super(array, 1, :*, :/, block)
