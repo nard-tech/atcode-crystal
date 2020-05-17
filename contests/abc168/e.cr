@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # WA
-# https://atcoder.jp/contests/abc168/submissions/13354123
+# https://atcoder.jp/contests/abc168/submissions/13354952
 
 # WA: sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16
 
@@ -21,7 +21,9 @@ class Sardine
   end
 
   def basis_vector : Array(Int64)
-    return to_a if to_a.any?(&.zero?)
+    return [0_i64, 0_i64] if to_a.all?(&.zero?)
+    return [0_i64, 1_i64] if to_a.first.zero?
+    return [1_i64, 0_i64] if to_a.last.zero?
 
     a = to_a.map { |i| i // gcd }
     if a.first < 0 # [+, -] または [+, +] になるようにする
@@ -42,10 +44,6 @@ class SardineGroup
 
   property invalid_group : SardineGroup | Nil
   property checked : Bool
-
-  def reset
-    @checked = false
-  end
 
   def calc(combination_calculator, mod) : Int64
     sardines_size = size
