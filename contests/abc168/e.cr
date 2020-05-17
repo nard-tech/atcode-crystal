@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # WA
-# https://atcoder.jp/contests/abc168/submissions/13353375
+# https://atcoder.jp/contests/abc168/submissions/13354123
 
 # WA: sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16
 
@@ -46,6 +46,43 @@ class SardineGroup
   def reset
     @checked = false
   end
+
+  def calc(combination_calculator, mod) : Int64
+    sardines_size = size
+
+    if basis_vector == [0_i64, 0_i64]
+      return (size + 1) % mod
+    end
+
+    j = (0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod).to_i64
+
+    if invalid_group.nil?
+      # puts "sardines_size: #{sardines_size}, j: #{j}"
+      return j % mod
+    end
+
+    invalid_group_instance = invalid_group.as(SardineGroup)
+
+    k = 0_i64.upto(invalid_size).map { |i| combination_calculator.get(invalid_size, i.to_i64) }.sum % mod
+    invalid_checked!
+
+    # puts "j + k - 1: #{j} + #{k} - 1 = #{j + k - 1}"
+
+    (j + k - 1).to_i64 % mod
+  end
+
+  private def size : Int64
+    sardines.size.to_i64
+  end
+
+  private def invalid_size : Int64
+    return 0_i64 if invalid_group.nil?
+    invalid_group.as(SardineGroup).sardines.size.to_i64
+  end
+
+  private def invalid_checked!
+    invalid_group.as(SardineGroup).checked = true
+  end
 end
 
 h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
@@ -71,45 +108,15 @@ end
 
 mod = 1000000007_i64
 combination_calculator = Combination.generate(n, mod)
-puts (count_combination(combination_calculator, sardine_groups, mod) - 1_i64) % mod
+i = 1_i64
 
-def multiply(i : Int64, j : Int64, mod : Int64)
-  i * j % mod
+sardine_groups.each do |basis_vector, sardine_group|
+  next if sardine_group.checked
+  i *= sardine_group.calc(combination_calculator, mod)
+  i %= mod
 end
 
-def count_combination(combination_calculator, sardine_groups, mod)
-  i = 1_i64
-
-  sardine_groups.each do |basis_vector, sardine_group|
-    next if sardine_group.checked
-
-    sardines_size = sardine_group.sardines.size.to_i64
-
-    if basis_vector == [0_i64, 0_i64]
-      i = multiply(i, sardines_size + 1, mod)
-      next
-    end
-
-    j = (0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod).to_i64
-
-    if sardine_group.invalid_group.nil?
-      # puts "sardines_size: #{sardines_size}, j: #{j}"
-      i = multiply(i, j, mod)
-      next
-    end
-
-    invalid_group = sardine_group.invalid_group.as(SardineGroup)
-    invalid_sardines_size = invalid_group.sardines.size.to_i64
-    k = 0_i64.upto(invalid_sardines_size).map { |i| combination_calculator.get(invalid_sardines_size, i.to_i64) }.sum % mod
-
-    # puts "j + k: #{j} + #{k}"
-    i = multiply(i, (j + k - 1).to_i64, mod)
-
-    invalid_group.checked = true
-  end
-
-  return i
-end
+puts (i - 1_i64) % mod
 
 # 階乗を扱うクラス
 class Factorial
