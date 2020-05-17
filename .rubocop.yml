@@ -19,3 +19,5 @@ Naming/MethodParameterName:
     - n
 Style/AsciiComments:
   Enabled: false
+Lint/RaiseException:
+  Enabled: true
