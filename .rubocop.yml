@@ -8,3 +8,5 @@ Layout/SpaceInsideParens:
     - 'spec/**/**.rb'
 Metrics/AbcSize:
   Max: 15
+Metrics/MethodLength:
+  Max: 10
