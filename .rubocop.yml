@@ -10,3 +10,10 @@ Metrics/AbcSize:
   Max: 15
 Metrics/MethodLength:
   Max: 10
+Naming/MethodParameterName:
+  AllowedNames:
+    - i
+    - j
+    - k
+    - m
+    - n
