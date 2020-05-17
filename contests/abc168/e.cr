@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # RE
-# https://atcoder.jp/contests/abc168/submissions/13342975
+# https://atcoder.jp/contests/abc168/submissions/13343568
 
 # RE: sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_21
 
@@ -68,7 +68,7 @@ end
 # end
 
 mod = 1000000007_i64
-combination_calculator = Combination.generate(n, mod)
+combination_calculator = Combination.generate(n.to_i64, mod.to_i64)
 puts (count_combination(combination_calculator, sardine_groups, mod) - 1_i64) % mod
 
 def count_combination(combination_calculator, sardine_groups, mod)
@@ -78,21 +78,21 @@ def count_combination(combination_calculator, sardine_groups, mod)
     next if sardine_group.checked == true
 
     sardines_size = sardine_group.sardines.size.to_i64
-    j = 0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i) }.sum % mod
+    j = 0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod
 
     if sardine_group.invalid_group.nil?
       # puts "sardines_size: #{sardines_size}, j: #{j}"
-      i *= j
+      i *= j.to_i64
       i %= mod
       next
     end
 
     invalid_group = sardine_group.invalid_group.as(SardineGroup)
     invalid_sardines_size = invalid_group.sardines.size.to_i64
-    k = 0_i64.upto(invalid_sardines_size).map { |i| combination_calculator.get(invalid_sardines_size, i) }.sum % mod
+    k = 0_i64.upto(invalid_sardines_size).map { |i| combination_calculator.get(invalid_sardines_size, i.to_i64) }.sum % mod
 
     # puts "j + k: #{j} + #{k}"
-    i *= (j + k - 1) % mod
+    i *= (j + k - 1).to_i64 % mod
     i %= mod
 
     invalid_group.checked = true
