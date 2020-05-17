@@ -287,8 +287,8 @@ def count_combination(combination_calculator, sardine_groups, mod)
 
     if sardine_group.invalid_group.nil?
       # puts "sardines_size: #{sardines_size}, j: #{j}"
-      i *= j
-      i %= mod
+      i = i * j
+      i = i % mod
       next
     end
 
@@ -297,8 +297,8 @@ def count_combination(combination_calculator, sardine_groups, mod)
     k = 0.upto(invalid_sardines_size).map { |i| combination_calculator.get(invalid_sardines_size, i) }.sum % mod
 
     # puts "j + k: #{j} + #{k}"
-    i *= (j + k - 1) % mod
-    i %= mod
+    i = i * (j + k - 1) % mod
+    i = i % mod
 
     invalid_group.checked = true
   end
@@ -306,9 +306,7 @@ def count_combination(combination_calculator, sardine_groups, mod)
   i
 end
 
-sardines = Array.new(n) { a, b = gets.chomp.split(/ /).map(&:to_i); Sardine.new(a, b) }
-
-h = sardines.group_by(&:basis_vector)
+h = Array.new(n) { a, b = gets.chomp.split(/ /).map(&:to_i); Sardine.new(a, b) }.group_by(&:basis_vector)
 
 sardine_groups = {}
 h.each do |basis_vector, sardines|
@@ -324,4 +322,4 @@ end
 
 mod = 1_000_000_007
 combination_calculator = Combination.generate(n, mod)
-puts count_combination(combination_calculator, sardine_groups, mod) - 1
+puts (count_combination(combination_calculator, sardine_groups, mod) - 1) % mod
