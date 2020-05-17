@@ -17,9 +17,9 @@ module WarshallFloyd
     attr_reader :array, :n
 
     def execute
-      for k in 1..n
-        for from in 1..n
-          for to in from..n
+      (1..n).each do |k|
+        (1..n).each do |from|
+          (from..n).each do |to|
             # puts "#{from} -> #{to} : #{distance(from, to).inspect}"
             new_distance = [
               distance(from, to),

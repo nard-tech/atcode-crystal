@@ -36,6 +36,7 @@ class Factorial
   # @return [Integer] n の階乗
   def get(n)
     raise ArgumentError if n > max
+
     @array[n]
   end
 
@@ -45,12 +46,12 @@ class Factorial
     array.push(1) # 0
     array.push(1) # 1
 
-    if max >= 2
-      2.upto(max) do |i|
-        f = array.last * i
-        f = f % mod unless mod.nil?
-        array.push(f)
-      end
+    return unless max >= 2
+
+    2.upto(max) do |i|
+      f = array.last * i
+      f = f % mod unless mod.nil?
+      array.push(f)
     end
   end
 end
@@ -101,11 +102,11 @@ class Inverse
     array.push(nil) # 0
     array.push(1)   # 1
 
-    if max >= 2
-      2.upto(max) do |i|
-        inv = mod - array[mod % i] * (mod / i) % mod
-        array.push(inv)
-      end
+    return unless max >= 2
+
+    2.upto(max) do |i|
+      inv = mod - array[mod % i] * (mod / i) % mod
+      array.push(inv)
     end
   end
 end
@@ -159,11 +160,11 @@ class FactorialInverse
     array.push(1) # 0
     array.push(1) # 1
 
-    if max >= 2
-      2.upto(max) do |i|
-        finv = array.last * inverse.get(i) % mod
-        array.push(finv)
-      end
+    return unless max >= 2
+
+    2.upto(max) do |i|
+      finv = array.last * inverse.get(i) % mod
+      array.push(finv)
     end
   end
 end
@@ -178,7 +179,7 @@ class Combination
   def self.calc(n, k, mod)
     if n < k
       0
-    elsif n < 0 || k < 0
+    elsif n.negative? || k.negative?
       0
     else
       generate(n, mod).get(n, k)
@@ -217,7 +218,7 @@ class Combination
   def get(n, k)
     if n < k
       0
-    elsif n < 0 || k < 0
+    elsif n.negative? || k.negative?
       0
     else
       factorial.get(n) * (factorial_inverse.get(k) * factorial_inverse.get(n - k) % mod) % mod

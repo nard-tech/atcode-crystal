@@ -1,0 +1,32 @@
+inherit_from: .rubocop_todo.yml
+
+Layout/ExtraSpacing:
+  Exclude:
+    - 'spec/**/**.rb'
+Layout/SpaceInsideParens:
+  Exclude:
+    - 'spec/**/**.rb'
+Metrics/AbcSize:
+  Max: 15
+Metrics/MethodLength:
+  Max: 10
+Naming/MethodParameterName:
+  AllowedNames:
+    - i
+    - j
+    - k
+    - m
+    - n
+    - to
+Style/AsciiComments:
+  Enabled: false
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true

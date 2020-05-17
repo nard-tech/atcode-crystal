@@ -8,13 +8,9 @@ class CumulativeCalculation
   end
 
   def initialize(array, first_element, operator_for_calc, operator_for_between, block)
-    unless %i[+ *].include?(operator_for_calc)
-      raise ArgumentError, 'operator_for_calc is not valid.'
-    end
+    raise ArgumentError, 'operator_for_calc is not valid.' unless %i[+ *].include?(operator_for_calc)
 
-    unless %i[- /].include?(operator_for_between)
-      raise ArgumentError, 'operator_for_between is not valid.'
-    end
+    raise ArgumentError, 'operator_for_between is not valid.' unless %i[- /].include?(operator_for_between)
 
     @array = array
     @first_element = first_element
@@ -28,9 +24,7 @@ class CumulativeCalculation
   attr_reader :result
 
   def between(i, j)
-    unless i <= j
-      raise ArgumentError, 'The second argument should be larger than the first argument.'
-    end
+    raise ArgumentError, 'The second argument should be larger than the first argument.' unless i <= j
 
     j_th = result[j + 1]
     i_th = result[i]
@@ -44,11 +38,11 @@ class CumulativeCalculation
 
   private
 
-  def calc(a, block)
+  def calc(array, block)
     result = []
     result.push(first_element)
 
-    a.each do |i|
+    array.each do |i|
       result.push(next_element(result.last, i, block))
     end
 
