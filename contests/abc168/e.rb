@@ -1,12 +1,12 @@
 # ABC 168 E - ∙ (Bullet)
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# WA
-# https://atcoder.jp/contests/abc168/submissions/13411063
+# TLE, WA
+# https://atcoder.jp/contests/abc168/submissions/13411139
 
 # TLE: sub1_01
 # WA: sub1_11, sub1_13, sub1_16
-# 1877 ms
+# 2063 ms
 
 class Sardine
   def initialize(taste, fragrance)
@@ -52,11 +52,11 @@ class SardineGroup
   def calc(mod)
     return size if basis_vector.all?(&:zero?)
 
-    j = (2 ** size) % mod
+    j = 1.upto(size).reduce(1) { |acc, i| acc * 2 % mod }
 
     return j if invalid_group.nil?
 
-    k = (2 ** invalid_size) % mod
+    k = 1.upto(invalid_size).reduce(1) { |acc, i| acc * 2 % mod }
     invalid_checked!
     (j + k - 1) % mod
   end
