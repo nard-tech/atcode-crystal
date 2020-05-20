@@ -1,12 +1,12 @@
 # ABC 168 E - ∙ (Bullet)
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# TLE, WA
-# https://atcoder.jp/contests/abc168/submissions/13411139
+# WA
+# https://atcoder.jp/contests/abc168/submissions/13411063
 
 # TLE: sub1_01
 # WA: sub1_11, sub1_13, sub1_16
-# 2063 ms
+# 1856 ms
 
 class Sardine
   def initialize(taste, fragrance)
@@ -29,7 +29,7 @@ class Sardine
     return [1, 0] if to_a.last.zero?
 
     a = to_a.map { |i| i / gcd }
-    if a.first.negative?
+    if a.all?(&:negative?) || a.first.negative?
       a.map { |i| i * -1 }
     else
       a
@@ -52,11 +52,11 @@ class SardineGroup
   def calc(mod)
     return size if basis_vector.all?(&:zero?)
 
-    j = 1.upto(size).reduce(1) { |acc, i| acc * 2 % mod }
+    j = (2 ** size) % mod
 
     return j if invalid_group.nil?
 
-    k = 1.upto(invalid_size).reduce(1) { |acc, i| acc * 2 % mod }
+    k = (2 ** invalid_size) % mod
     invalid_checked!
     (j + k - 1) % mod
   end
@@ -66,7 +66,11 @@ class SardineGroup
   end
 
   def basis_vector_inverse
-    basis_vector[1].negative? ? [basis_vector[1] * -1, basis_vector[0]] : [basis_vector[1], basis_vector[0] * -1]
+    if basis_vector[1].negative?
+      [basis_vector[1] * -1, basis_vector[0]]
+    else
+      [basis_vector[1], basis_vector[0] * -1]
+    end
   end
 
   private
