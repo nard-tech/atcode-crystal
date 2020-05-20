@@ -1,139 +1,86 @@
 # ABC 168 E - ∙ (Bullet)
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# WA
-# https://atcoder.jp/contests/abc168/submissions/13435430
+# TLE, WA
+# https://atcoder.jp/contests/abc168/submissions/13436748
 
 # TLE: sub1_01
-# WA: sub1_11, sub1_13, sub1_16
-# 1809 ms
+# WA: sub1_02, sub1_21
+# 2210 ms
 
 class Sardine
   def initialize(taste, fragrance)
     @taste = taste
     @fragrance = fragrance
-
-    @gcd = taste.abs.gcd(fragrance.abs)
   end
 
   attr_reader :taste, :fragrance
-  attr_reader :gcd
 
   def to_a
     [taste, fragrance]
   end
 
-  def basis_vector
-    return [0, 0] if to_a.all?(&:zero?)
-    return [0, 1] if to_a.first.zero?
-    return [1, 0] if to_a.last.zero?
-
-    a = to_a.map { |i| i / gcd }
-    if a.all?(&:negative?) || a.first.negative?
-      a.map { |i| i * -1 }
-    else
-      a
-    end
-  end
-end
-
-class SardineGroup
-  def initialize(basis_vector, sardines)
-    @basis_vector = basis_vector
-    @sardines = sardines
-
-    @invalid_group = nil
-    @checked = false
+  def zero_vector?
+    to_a.all?(&:zero?)
   end
 
-  attr_reader :basis_vector, :sardines
-  attr_accessor :invalid_group, :checked
-
-  def calc(mod)
-    return size if basis_vector.all?(&:zero?)
-
-    j = (2 ** size) % mod
-
-    return j if invalid_group.nil?
-
-    k = (2 ** invalid_size) % mod
-    invalid_checked!
-    (j + k - 1) % mod
+  def vertical?
+    to_a.first.zero?
   end
 
-  def size
-    @size ||= sardines.size
-  end
+  def to_rational
+    return :zero_vector if zero_vector?
+    return :vertical if to_a.first.zero?
+    return :horizontal if to_a.last.zero?
 
-  def basis_vector_inverse
-    if basis_vector[1].negative?
-      [basis_vector[1] * -1, basis_vector[0]]
-    else
-      [basis_vector[1], basis_vector[0] * -1]
-    end
-  end
-
-  private
-
-  def invalid_size
-    if invalid_group.nil?
-      0
-    else
-      invalid_group.sardines.size
-    end
-  end
-
-  def invalid_checked!
-    invalid_group.checked = true
+    Rational(fragrance, taste)
   end
 end
 
 n = gets.chomp.to_i
-h = Array.new(n) { a, b = gets.chomp.split(/ /).map(&:to_i); Sardine.new(a, b) }.group_by(&:basis_vector)
+sardines = Array.new(n) { a, b = gets.chomp.split(/ /).map(&:to_i); Sardine.new(a, b) }
 
-# rows = File.open("contests/abc168/e/in/#{gets.chomp}.txt", 'r:utf-8').read.chomp.split(/\n/)
-# n = rows.shift.to_i
-# h = rows.map { |row| a, b = row.split(/ /).map(&:to_i); Sardine.new(a, b) }.group_by(&:basis_vector)
+sardines_with_zero_vector, sardines_with_nonzero_vector = sardines.partition(&:zero_vector?)
 
 sardine_groups = {}
-h.each do |basis_vector, sardines|
-  sardine_groups[basis_vector] = SardineGroup.new(basis_vector, sardines)
-end
-
-sardine_groups.each do |basis_vector, sardine_group|
-  next if basis_vector.all?(&:zero?)
-  basis_vector_inverse = sardine_group.basis_vector_inverse
-  if sardine_groups.key?(basis_vector_inverse)
-    sardine_groups[basis_vector].invalid_group = sardine_groups[basis_vector_inverse]
+sardines_with_nonzero_vector.each do |sardine|
+  r = sardine.to_rational
+  case r
+  when :vertical
+    sardine_groups[:on_coordinate] ||= [[], []]
+    sardine_groups[:on_coordinate][1].push(sardine)
+  when :horizontal
+    sardine_groups[:on_coordinate] ||= [[], []]
+    sardine_groups[:on_coordinate][0].push(sardine)
+  when Proc.new(&:positive?)
+    sardine_groups[r] ||= [[], []]
+    sardine_groups[r][0].push(sardine)
+  else
+    sardine_groups[- (r ** -1)] ||= [[], []]
+    sardine_groups[- (r ** -1)][1].push(sardine)
   end
 end
 
 mod = 1_000_000_007
 
-sardine_group_with_zero_basis_vector = sardine_groups.delete([0, 0])
-
-def calc_sardine_groups(sardine_groups, mod)
-  return 0 if sardine_groups.size == 0
-
-  i = 1
-  sardine_groups.each do |basis_vector, sardine_group|
-    if sardine_group.checked
-      # sample_01, sample_02, sub1_12, sub1_14, sub1_15, sub1_17, sub1_18
-      # puts "basis_vector: #{basis_vector.size}"
-      next
-    end
-    i *= sardine_group.calc(mod)
-    i %= mod
-  end
-  (i - 1) % mod
+def calc_sardine_groups(sardine_group, mod)
+  group_plus, group_minus = sardine_group
+  (((2 ** group_plus.size) % mod) + ((2 ** group_minus.size) % mod) - 1) % mod
 end
+
+# puts sardine_groups.inspect
 
 i = 0
-i += calc_sardine_groups(sardine_groups, mod)
-unless sardine_group_with_zero_basis_vector.nil?
-  # puts "sardine_group_with_zero_basis_vector: #{sardine_group_with_zero_basis_vector.size}"
-  # sub1_02, sub1_12, sub1_14, sub1_15, sub1_21
-  i += sardine_group_with_zero_basis_vector.size.to_i % mod
+unless sardine_groups.empty?
+  j = 1
+  sardine_groups.each do |key, sardine_group|
+    j *= calc_sardine_groups(sardine_group, mod) % mod
+  end
+  i += j % mod
 end
 
-puts i % mod
+unless sardines_with_zero_vector.empty?
+  i += sardines_with_zero_vector.size % mod
+end
+
+puts (i - 1) % mod
