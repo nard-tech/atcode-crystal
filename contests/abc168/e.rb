@@ -2,11 +2,11 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # WA
-# https://atcoder.jp/contests/abc168/submissions/13411063
+# https://atcoder.jp/contests/abc168/submissions/13435430
 
 # TLE: sub1_01
 # WA: sub1_11, sub1_13, sub1_16
-# 1856 ms
+# 1809 ms
 
 class Sardine
   def initialize(taste, fragrance)
@@ -117,7 +117,11 @@ def calc_sardine_groups(sardine_groups, mod)
 
   i = 1
   sardine_groups.each do |basis_vector, sardine_group|
-    next if sardine_group.checked
+    if sardine_group.checked
+      # sample_01, sample_02, sub1_12, sub1_14, sub1_15, sub1_17, sub1_18
+      # puts "basis_vector: #{basis_vector.size}"
+      next
+    end
     i *= sardine_group.calc(mod)
     i %= mod
   end
@@ -128,6 +132,7 @@ i = 0
 i += calc_sardine_groups(sardine_groups, mod)
 unless sardine_group_with_zero_basis_vector.nil?
   # puts "sardine_group_with_zero_basis_vector: #{sardine_group_with_zero_basis_vector.size}"
+  # sub1_02, sub1_12, sub1_14, sub1_15, sub1_21
   i += sardine_group_with_zero_basis_vector.size.to_i % mod
 end
 
