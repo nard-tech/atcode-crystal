@@ -1,11 +1,10 @@
 # ABC 168 E - ∙ (Bullet)
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# TLE, WA
-# https://atcoder.jp/contests/abc168/submissions/13436748
+# TLE
+# https://atcoder.jp/contests/abc168/submissions/13436903
 
 # TLE: sub1_01
-# WA: sub1_02, sub1_21
 # 2210 ms
 
 class Sardine
@@ -46,12 +45,12 @@ sardine_groups = {}
 sardines_with_nonzero_vector.each do |sardine|
   r = sardine.to_rational
   case r
-  when :vertical
-    sardine_groups[:on_coordinate] ||= [[], []]
-    sardine_groups[:on_coordinate][1].push(sardine)
   when :horizontal
     sardine_groups[:on_coordinate] ||= [[], []]
     sardine_groups[:on_coordinate][0].push(sardine)
+  when :vertical
+    sardine_groups[:on_coordinate] ||= [[], []]
+    sardine_groups[:on_coordinate][1].push(sardine)
   when Proc.new(&:positive?)
     sardine_groups[r] ||= [[], []]
     sardine_groups[r][0].push(sardine)
@@ -68,19 +67,17 @@ def calc_sardine_groups(sardine_group, mod)
   (((2 ** group_plus.size) % mod) + ((2 ** group_minus.size) % mod) - 1) % mod
 end
 
-# puts sardine_groups.inspect
-
 i = 0
 unless sardine_groups.empty?
   j = 1
   sardine_groups.each do |key, sardine_group|
     j *= calc_sardine_groups(sardine_group, mod) % mod
   end
-  i += j % mod
+  i += (j - 1) % mod
 end
 
 unless sardines_with_zero_vector.empty?
   i += sardines_with_zero_vector.size % mod
 end
 
-puts (i - 1) % mod
+puts i % mod
