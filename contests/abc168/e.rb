@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # TLE
-# https://atcoder.jp/contests/abc168/submissions/13436903
+# https://atcoder.jp/contests/abc168/submissions/13461305
 
 # TLE: sub1_01
 # 2210 ms
@@ -36,6 +36,29 @@ class Sardine
   end
 end
 
+class Power
+  def initialize(base, mod)
+    @base = base
+    @mod = mod
+
+    @array = [1]
+  end
+
+  attr_reader :base, :mod
+
+  def get(n)
+    last_index = @array.length - 1
+
+    if n > last_index
+      (n - (@array.length - 1)).times do
+        @array.push(@array.last * base % mod)
+      end
+    end
+
+    @array[n]
+  end
+end
+
 n = gets.chomp.to_i
 sardines = Array.new(n) { a, b = gets.chomp.split(/ /).map(&:to_i); Sardine.new(a, b) }
 
@@ -62,16 +85,19 @@ end
 
 mod = 1_000_000_007
 
-def calc_sardine_groups(sardine_group, mod)
+def calc_sardine_groups(sardine_group, power_instance, mod)
   group_plus, group_minus = sardine_group
-  (((2 ** group_plus.size) % mod) + ((2 ** group_minus.size) % mod) - 1) % mod
+  j = power_instance.get(group_plus.size)
+  k = power_instance.get(group_minus.size)
+  (j + k - 1) % mod
 end
 
 i = 0
 unless sardine_groups.empty?
   j = 1
+  power_instance = Power.new(2, mod)
   sardine_groups.each do |key, sardine_group|
-    j *= calc_sardine_groups(sardine_group, mod) % mod
+    j *= calc_sardine_groups(sardine_group, power_instance, mod) % mod
   end
   i += (j - 1) % mod
 end
