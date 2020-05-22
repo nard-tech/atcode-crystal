@@ -2,12 +2,20 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # WA
-# https://atcoder.jp/contests/abc168/submissions/13408688
+# https://atcoder.jp/contests/abc168/submissions/13409957
 
 # WA: sub1_11, sub1_13, sub1_16
 
 n = read_line.to_i64
 h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
+
+# filename = read_line
+# file = File.new("contests/abc168/e/in/#{filename}.txt")
+# content = file.gets_to_end.chomp.split(/\n/)
+# file.close
+
+# n = content.shift.to_i64
+# h = content.map { |row| a, b = row.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
 
 class Sardine
   def initialize(@taste : Int64, @fragrance : Int64)
@@ -131,6 +139,7 @@ end
 i = 0_i64
 i += calc_sardine_groups(sardine_groups, combination_calculator, mod)
 unless sardine_group_with_zero_basis_vector.nil?
+  # puts "sardine_group_with_zero_basis_vector: #{sardine_group_with_zero_basis_vector.size}"
   i += sardine_group_with_zero_basis_vector.size.to_i64 % mod
 end
 
