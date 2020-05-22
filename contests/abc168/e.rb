@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # TLE
-# https://atcoder.jp/contests/abc168/submissions/13471288
+# https://atcoder.jp/contests/abc168/submissions/13471768
 
 # TLE: sub1_01
 # 2210 ms
@@ -40,26 +40,34 @@ class Sardine
   end
 end
 
-class Power
-  def initialize(base, mod)
+class ModPower
+  def initialize(base, mod = nil)
     @base = base
     @mod = mod
 
-    @array = [1]
+    @h = {
+      0 => 1,
+      1 => (mod ? base % mod : base )
+    }
   end
 
   attr_reader :base, :mod
 
   def get(n)
-    last_index = @array.length - 1
-
-    if n > last_index
-      (n - (@array.length - 1)).times do
-        @array.push(@array.last * base % mod)
-      end
+    if @h.key?(n)
+      # puts "n: #{n}"
+      return @h[n]
     end
 
-    @array[n]
+    if n % 2 == 0
+      v = get(n / 2) ** 2
+      v %= mod if mod
+    else
+      v = (get(n / 2) ** 2) * get(1)
+      v %= mod if mod
+    end
+
+    @h[n] = v
   end
 end
 
@@ -99,7 +107,7 @@ end
 i = 0
 unless sardine_groups.empty?
   j = 1
-  power_instance = Power.new(2, mod)
+  power_instance = ModPower.new(2, mod)
   sardine_groups.each do |key, sardine_group|
     j *= calc_sardine_groups(sardine_group, power_instance, mod) % mod
   end
