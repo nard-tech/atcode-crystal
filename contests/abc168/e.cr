@@ -2,11 +2,12 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # WA
-# https://atcoder.jp/contests/abc168/submissions/13355234
+# https://atcoder.jp/contests/abc168/submissions/13408688
 
-# WA: sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16
+# WA: sub1_11, sub1_13, sub1_16
 
 n = read_line.to_i64
+h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
 
 class Sardine
   def initialize(@taste : Int64, @fragrance : Int64)
@@ -46,31 +47,35 @@ class SardineGroup
   property checked : Bool
 
   def calc(combination_calculator, mod) : Int64
+    return size if basis_vector.all?(&.zero?)
+
     sardines_size = size
 
-    if basis_vector == [0_i64, 0_i64]
-      return (size + 1) % mod
-    end
-
+    # j = ((2_i64 ** sardines_size) % mod).to_i64
     j = (0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod).to_i64
 
     if invalid_group.nil?
       # puts "sardines_size: #{sardines_size}, j: #{j}"
-      return j % mod
+      return j
     end
 
     invalid_group_instance = invalid_group.as(SardineGroup)
 
+    # k = ((2_i64 ** invalid_size) % mod).to_i64
     k = 0_i64.upto(invalid_size).map { |i| combination_calculator.get(invalid_size, i.to_i64) }.sum % mod
     invalid_checked!
 
     # puts "j + k - 1: #{j} + #{k} - 1 = #{j + k - 1}"
 
-    (j + k - 1).to_i64 % mod
+    (j + k - 1_i64).to_i64 % mod
   end
 
-  private def size : Int64
+  def size : Int64
     sardines.size.to_i64
+  end
+
+  def basis_vector_inverse
+    basis_vector[1] < 0 ? [basis_vector[1] * -1, basis_vector[0]] : [basis_vector[1], basis_vector[0] * -1] # [+, -] または [+, +] になるようにする
   end
 
   private def invalid_size : Int64
@@ -86,15 +91,14 @@ class SardineGroup
   end
 end
 
-h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
-
 sardine_groups = Hash(Array(Int64), SardineGroup).new
 h.each do |basis_vector, sardines|
   sardine_groups[basis_vector] = SardineGroup.new(basis_vector, sardines)
 end
 
 sardine_groups.each do |basis_vector, sardine_group|
-  basis_vector_inverse = basis_vector[1] < 0 ? [basis_vector[1] * -1, basis_vector[0]] : [basis_vector[1], basis_vector[0] * -1] # [+, -] または [+, +] になるようにする
+  next if basis_vector.all?(&.zero?)
+  basis_vector_inverse = sardine_group.basis_vector_inverse
   if sardine_groups.has_key?(basis_vector_inverse)
     # puts "basis_vector: #{basis_vector}, basis_vector_inverse: #{basis_vector_inverse}"
     sardine_groups[basis_vector].invalid_group = sardine_groups[basis_vector_inverse]
@@ -109,15 +113,28 @@ end
 
 mod = 1000000007_i64
 combination_calculator = Combination.generate(n, mod)
-i = 1_i64
 
-sardine_groups.each do |basis_vector, sardine_group|
-  next if sardine_group.checked
-  i *= sardine_group.calc(combination_calculator, mod)
-  i %= mod
+sardine_group_with_zero_basis_vector = sardine_groups.delete([0_i64, 0_i64])
+
+def calc_sardine_groups(sardine_groups : Hash(Array(Int64), SardineGroup), combination_calculator, mod) : Int64
+  return 0_i64 if sardine_groups.size == 0
+
+  i = 1_i64
+  sardine_groups.each do |basis_vector, sardine_group|
+    next if sardine_group.checked
+    i *= sardine_group.calc(combination_calculator, mod)
+    i %= mod
+  end
+  (i - 1_i64) % mod
 end
 
-puts (i - 1_i64) % mod
+i = 0_i64
+i += calc_sardine_groups(sardine_groups, combination_calculator, mod)
+unless sardine_group_with_zero_basis_vector.nil?
+  i += sardine_group_with_zero_basis_vector.size.to_i64 % mod
+end
+
+puts i % mod
 
 # 階乗を扱うクラス
 class Factorial
