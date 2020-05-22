@@ -1,13 +1,74 @@
 # ABC 168 E
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# WA
-# https://atcoder.jp/contests/abc168/submissions/13409957
+# TLE
+# https://atcoder.jp/contests/abc168/submissions/13473252
 
-# WA: sub1_11, sub1_13, sub1_16
+# WA: sub1_19, sub1_20
+
+require "big"
+
+class Sardine
+  def initialize(@taste : Int64, @fragrance : Int64)
+  end
+
+  getter :taste, :fragrance
+
+  def to_a : Array(Int64)
+    [taste, fragrance]
+  end
+
+  def zero_vector? : Bool
+    to_a.all?(&.zero?)
+  end
+
+  def vertical? : Bool
+    to_a.first.zero?
+  end
+
+  def horizontal? : Bool
+    to_a.last.zero?
+  end
+
+  def to_rational : BigRational | Symbol
+    return :zero_vector if zero_vector?
+    return :vertical if vertical?
+    return :horizontal if horizontal?
+
+    BigRational.new(fragrance, taste)
+  end
+end
+
+class ModPower
+  def initialize(@base : Int64, @mod : Int64 | Nil = nil)
+    @h = {
+      0_i64 => 1_i64,
+      1_i64 => (mod ? base % mod : base)
+    }
+  end
+
+  getter :base, :mod
+  getter h : Hash(Int64, Int64)
+
+  def get(n : Int64)
+    if @h.has_key?(n)
+      return @h[n]
+    end
+
+    if n % 2 == 0
+      v = get(n // 2) ** 2
+      v %= mod.as(Int64) if mod
+    else
+      v = (get(n // 2) ** 2) * get(1_i64)
+      v %= mod.as(Int64) if mod
+    end
+
+    @h[n] = v
+  end
+end
 
 n = read_line.to_i64
-h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
+sardines = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }
 
 # filename = read_line
 # file = File.new("contests/abc168/e/in/#{filename}.txt")
@@ -15,353 +76,87 @@ h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.gro
 # file.close
 
 # n = content.shift.to_i64
-# h = content.map { |row| a, b = row.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
+# sardines = content.map { |row| a, b = row.split.map(&.to_i64); Sardine.new(a, b) }
 
-class Sardine
-  def initialize(@taste : Int64, @fragrance : Int64)
-    @gcd = taste.abs.gcd(fragrance.abs)
-  end
+# --------
 
-  getter :taste, :fragrance
-  getter gcd : Int64
+sardines_with_zero_vector, sardines_with_nonzero_vector = sardines.partition(&.zero_vector?)
 
-  def to_a : Array(Int64)
-    [taste, fragrance]
-  end
+# puts "sardines_with_zero_vector: #{sardines_with_zero_vector.inspect}"
+# puts "sardines_with_nonzero_vector: #{sardines_with_nonzero_vector.inspect}"
 
-  def basis_vector : Array(Int64)
-    return [0_i64, 0_i64] if to_a.all?(&.zero?)
-    return [0_i64, 1_i64] if to_a.first.zero?
-    return [1_i64, 0_i64] if to_a.last.zero?
-
-    a = to_a.map { |i| i // gcd }
-    if a.first < 0 # [-, +], [-, -] の形のベクトルは [+, -] または [+, +] になるようにする
-      a.map { |i| i * -1 }
+sardine_groups = Hash(
+  (Symbol | BigRational),
+  Array(Array(Sardine))
+).new {
+  [
+    [] of Sardine,
+    [] of Sardine
+  ]
+}
+sardines_with_nonzero_vector.each do |sardine|
+  r = sardine.to_rational
+  # puts "r: #{r}"
+  case r
+  when :horizontal
+    sarding_group = [
+      sardine_groups[:on_coordinate][0].push(sardine),
+      sardine_groups[:on_coordinate][1]
+    ]
+    sardine_groups[:on_coordinate] = sarding_group
+  when :vertical
+    sarding_group = [
+      sardine_groups[:on_coordinate][0],
+      sardine_groups[:on_coordinate][1].push(sardine)
+    ]
+    sardine_groups[:on_coordinate] = sarding_group
+  else
+    rational = r.as(BigRational)
+    # puts "rational: #{rational}"
+    if rational > 0
+      sardine_group = [
+        sardine_groups[rational][0].push(sardine),
+        sardine_groups[rational][1]
+      ]
+      sardine_groups[rational] = sardine_group
     else
-      a
+      sardine_group = [
+        sardine_groups[- (rational ** -1)][0],
+        sardine_groups[- (rational ** -1)][1].push(sardine)
+      ]
+      sardine_groups[- (rational ** -1)] = sardine_group
     end
   end
 end
 
-class SardineGroup
-  def initialize(@basis_vector : Array(Int64), @sardines : Array(Sardine))
-    @invalid_group = nil
-    @checked = false
-  end
-
-  getter :basis_vector, :sardines
-
-  property invalid_group : SardineGroup | Nil
-  property checked : Bool
-
-  def calc(combination_calculator, mod) : Int64
-    return size if basis_vector.all?(&.zero?)
-
-    sardines_size = size
-
-    # j = ((2_i64 ** sardines_size) % mod).to_i64
-    j = (0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod).to_i64
-
-    if invalid_group.nil?
-      # puts "sardines_size: #{sardines_size}, j: #{j}"
-      return j
-    end
-
-    invalid_group_instance = invalid_group.as(SardineGroup)
-
-    # k = ((2_i64 ** invalid_size) % mod).to_i64
-    k = 0_i64.upto(invalid_size).map { |i| combination_calculator.get(invalid_size, i.to_i64) }.sum % mod
-    invalid_checked!
-
-    # puts "j + k - 1: #{j} + #{k} - 1 = #{j + k - 1}"
-
-    (j + k - 1_i64).to_i64 % mod
-  end
-
-  def size : Int64
-    sardines.size.to_i64
-  end
-
-  def basis_vector_inverse
-    basis_vector[1] < 0 ? [basis_vector[1] * -1, basis_vector[0]] : [basis_vector[1], basis_vector[0] * -1] # [+, -] または [+, +] になるようにする
-  end
-
-  private def invalid_size : Int64
-    if invalid_group.nil?
-      0_i64
-    else
-      invalid_group.as(SardineGroup).sardines.size.to_i64
-    end
-  end
-
-  private def invalid_checked!
-    invalid_group.as(SardineGroup).checked = true
-  end
-end
-
-sardine_groups = Hash(Array(Int64), SardineGroup).new
-h.each do |basis_vector, sardines|
-  sardine_groups[basis_vector] = SardineGroup.new(basis_vector, sardines)
-end
-
-sardine_groups.each do |basis_vector, sardine_group|
-  next if basis_vector.all?(&.zero?)
-  basis_vector_inverse = sardine_group.basis_vector_inverse
-  if sardine_groups.has_key?(basis_vector_inverse)
-    # puts "basis_vector: #{basis_vector}, basis_vector_inverse: #{basis_vector_inverse}"
-    sardine_groups[basis_vector].invalid_group = sardine_groups[basis_vector_inverse]
-  end
-end
-
-# sardine_groups.each do |basis_vector, sardine_group|
-#   puts "#{basis_vector.inspect}"
-#   puts "  (#{sardine_group.sardines.size})"
-#   puts "  #{sardine_group.inspect}"
-# end
+# puts "sardine_groups: #{sardine_groups.inspect}"
 
 mod = 1000000007_i64
-combination_calculator = Combination.generate(n, mod)
 
-sardine_group_with_zero_basis_vector = sardine_groups.delete([0_i64, 0_i64])
-
-def calc_sardine_groups(sardine_groups : Hash(Array(Int64), SardineGroup), combination_calculator, mod) : Int64
-  return 0_i64 if sardine_groups.size == 0
-
-  i = 1_i64
-  sardine_groups.each do |basis_vector, sardine_group|
-    next if sardine_group.checked
-    i *= sardine_group.calc(combination_calculator, mod)
-    i %= mod
-  end
-  (i - 1_i64) % mod
+def calc_sardine_groups(sardine_group : Array(Array(Sardine)), power_instance : ModPower, mod : Int64)
+  group_plus, group_minus = sardine_group
+  j = power_instance.get(group_plus.size.to_i64)
+  k = power_instance.get(group_minus.size.to_i64)
+  # j = 2.to_i128 ** group_plus.size.to_i128 % mod
+  # k = 2.to_i128 ** group_minus.size.to_i128 % mod
+  (j + k - 1_i64) % mod
 end
 
 i = 0_i64
-i += calc_sardine_groups(sardine_groups, combination_calculator, mod)
-unless sardine_group_with_zero_basis_vector.nil?
-  # puts "sardine_group_with_zero_basis_vector: #{sardine_group_with_zero_basis_vector.size}"
-  i += sardine_group_with_zero_basis_vector.size.to_i64 % mod
+unless sardine_groups.empty?
+  j = 1_i64
+  power_instance = ModPower.new(2_i64, mod)
+  sardine_groups.each do |key, sardine_group|
+    # puts "j: #{j}"
+    j *= calc_sardine_groups(sardine_group, power_instance, mod)
+    j %= mod
+  end
+  # puts "j: #{j}"
+  i += (j - 1_i64) % mod
+end
+
+unless sardines_with_zero_vector.empty?
+  i += sardines_with_zero_vector.size % mod
 end
 
 puts i % mod
-
-# 階乗を扱うクラス
-class Factorial
-  # 与えられた自然数の階乗を計算して返すメソッド
-  # @param n [Int64] 対象の自然数
-  # @param mod [Int64 | Nil] 「p で割った余り」を計算する場合の p
-  # @return [Int64] n の階乗
-  def self.calc(n : Int64, mod : Int64 | Nil = nil) : Int64
-    new(n, mod).get(n)
-  end
-
-  # 階乗を計算するインスタンスを生成するメソッド
-  # @param max [Int64] 階乗を計算する対象となる最大の自然数
-  # @param mod [Int64 | Nil] 「p で割った余り」を計算する場合の p
-  def self.generate(max : Int64, mod : Int64 | Nil = nil) : Factorial
-    new(max, mod)
-  end
-
-  # 階乗を計算するインスタンスを生成するメソッド
-  # @note .generate を用い，.new は使わないこと
-  # @param max [Int64] 階乗を計算する対象となる最大の自然数
-  # @param mod [Int64 | Nil] 「p で割った余り」を計算する場合の p
-  def initialize(@max : Int64, @mod : Int64 | Nil = nil)
-    @array = [] of Int64
-    set_up
-  end
-
-  getter :max, :mod, array : Array(Int64)
-
-  # 計算済みの階乗の値を返すメソッド
-  # @param n [Int64] 対象の自然数
-  # @return [Int64] n の階乗
-  def get(n : Int64) : Int64
-    raise "ArgumentError" if n > max
-    array[n]
-  end
-
-  def get(n : Int32) : Int64
-    get(n.to_i64)
-  end
-
-  private def set_up
-    array.push(1_i64) # 0
-    array.push(1_i64) # 1
-
-    if max >= 2
-      2_i64.upto(max) do |i|
-        f = array.last * i
-        f = f % mod.as(Int64) unless mod.nil?
-        array.push(f)
-      end
-    end
-  end
-end
-
-# 逆元を扱うクラス
-class Inverse
-  # 与えられた自然数の逆元を計算して返すメソッド
-  # @param n [Int64] 対象の自然数
-  # @param mod [Int64 | Nil] mod p での逆元を計算する場合の p（素数）
-  # @return [Int64] n の mod p での逆元
-  def self.calc(n : Int64, mod : Int64) : Int64 | Nil
-    new(n, mod).get(n)
-  end
-
-  # 逆元を生成するインスタンスを生成するメソッド
-  # @param max [Int64] 逆元を計算する対象となる最大の自然数
-  # @param mod [Int64] mod p での逆元を計算する場合の p（素数）
-  def self.generate(max : Int64, mod : Int64) : Inverse
-    new(max, mod)
-  end
-
-  # 逆元を生成するインスタンスを生成するメソッド
-  # @note .generate を用い，.new は使わないこと
-  # @param max [Int64] 逆元を計算する対象となる最大の自然数
-  # @param mod [Int64] mod p での逆元を計算する場合の p（素数）
-  def initialize(@max : Int64, @mod : Int64)
-    @array = [] of Int64 | Nil
-    set_up
-  end
-
-  getter :max, :mod, array : Array(Int64 | Nil)
-
-  # 計算済みの逆元の値を返すメソッド
-  # @param n [Int64] 対象の自然数
-  # @return [Int64] n の逆元
-  def get(n : Int64) : Int64 | Nil
-    array[n]
-  end
-
-  def get(n : Int32) : Int64 | Nil
-    get(n.to_i64)
-  end
-
-  private def set_up
-    array.push(nil)   # 0
-    array.push(1_i64) # 1
-
-    if max >= 2
-      2_i64.upto(max) do |i|
-        inv = mod - array[mod % i].as(Int64) * div(mod, i) % mod
-        array.push(inv)
-      end
-    end
-  end
-
-  # @note Crystal::VERSION に注意
-  private def div(a : Int64, b : Int64) : Int64
-    (a // b).to_i64 # Crystal::VERSION == "0.33.0"
-  end
-end
-
-# 「階乗の逆元」を扱うクラス
-class FactorialInverse
-  # 与えられた自然数の「階乗の逆元」を計算して返すメソッド
-  # @param n [Int64] 対象の自然数
-  # @param mod [Int64] mod p での逆元を計算する場合の p（素数）
-  # @return [Int64] n! の mod p での逆元
-  def self.calc(n : Int64, mod : Int64 | Nil = nil)
-    generate(n, mod).get(n)
-  end
-
-  # 「階乗の逆元」を計算するインスタンスを生成するメソッド
-  # @param max [Int64] 「階乗の逆元」を計算する対象となる最大の自然数
-  # @param mod [Int64] mod p での逆元を計算する場合の p（素数）
-  def self.generate(max, mod)
-    inverse = Inverse.generate(max, mod)
-    new(max, inverse, mod)
-  end
-
-  # 「階乗の逆元」を計算するインスタンスを生成するメソッド
-  # @note .generate を用い，.new は使わないこと
-  # @param max [Int64] 「階乗の逆元」を計算する対象となる最大の自然数
-  # @param inverse [Inverse] 計算済みの逆元を格納したオブジェクト
-  # @param mod [Int64] mod p での逆元を計算する場合の p（素数）
-  def initialize(@max : Int64, @inverse : Inverse, @mod : Int64)
-    @array = [] of Int64
-    set_up
-  end
-
-  getter :max, :inverse, :mod, array : Array(Int64)
-
-  # 計算済みの「階乗の逆元」の値を返すメソッド
-  # @param n [Int64] 対象の自然数
-  # @return [Int64] 階乗の逆元
-  def get(n : Int64) : Int64
-    @array[n]
-  end
-
-  def get(n : Int32) : Int64
-    get(n.to_i64)
-  end
-
-  private def set_up
-    array.push(1_i64) # 0
-    array.push(1_i64) # 1
-
-    if max >= 2
-      2_i64.upto(max) do |i|
-        finv = array.last * inverse.get(i).as(Int64) % mod
-        array.push(finv)
-      end
-    end
-  end
-end
-
-# 二項係数を扱うクラス
-class Combination
-  # 二項係数を計算するメソッド
-  # @param n [Int64]
-  # @param k [Int64]
-  # @param mod [Int64] 「p で割った余り」 を計算する場合の p
-  # @return [Int64] 二項係数
-  def self.calc(n : Int64, k : Int64, mod : Int64) : Int64
-    if n < k
-      0_i64
-    elsif n < 0 || k < 0
-      0_i64
-    else
-      generate(n, mod).get(n, k)
-    end
-  end
-
-  # 二項係数を計算するインスタンスを生成するメソッド
-  # @param max [Int64] 計算対象の n の最大値
-  # @param mod [Int64] 「p で割った余り」 を計算する場合の p
-  def self.generate(max : Int64, mod : Int64) : Combination
-    factorial = Factorial.generate(max, mod)
-    factorial_inverse = FactorialInverse.generate(max, mod)
-
-    new(factorial, factorial_inverse, mod)
-  end
-
-  # 二項係数を計算するインスタンスを生成するメソッド
-  # @note .generate を用い，.new は使わないこと
-  # @param factorial [Factorial] 階乗を計算するインスタンス
-  # @param factorial_inverse [FactorialInverse] 「階乗の逆元」を計算するインスタンス
-  # @param mod [Int64] 「p で割った余り」 を計算する場合の p
-  def initialize(@factorial : Factorial, @factorial_inverse : FactorialInverse, @mod : Int64)
-  end
-
-  getter :factorial, :factorial_inverse, :mod
-
-  # 二項係数の値を計算して返すメソッド
-  # @param n [Int64]
-  # @param k [Int64]
-  # @return [Int64]
-  def get(n : Int64, k : Int64) : Int64
-    if n < k
-      0_i64
-    elsif n < 0 || k < 0
-      0_i64
-    else
-      factorial.get(n) * (factorial_inverse.get(k) * factorial_inverse.get(n - k) % mod) % mod
-    end
-  end
-
-  def get(n : Int32, k : Int64)
-    get(n.to_i64, k.to_i64)
-  end
-end
