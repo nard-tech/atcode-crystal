@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
 # TLE
-# https://atcoder.jp/contests/abc168/submissions/13461305
+# https://atcoder.jp/contests/abc168/submissions/13471288
 
 # TLE: sub1_01
 # 2210 ms
@@ -27,10 +27,14 @@ class Sardine
     to_a.first.zero?
   end
 
+  def horizontal?
+    to_a.last.zero?
+  end
+
   def to_rational
     return :zero_vector if zero_vector?
-    return :vertical if to_a.first.zero?
-    return :horizontal if to_a.last.zero?
+    return :vertical if vertical?
+    return :horizontal if horizontal?
 
     Rational(fragrance, taste)
   end
