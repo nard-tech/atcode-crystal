@@ -1,11 +1,10 @@
 # ABC 168 E
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# RE, WA
-# https://atcoder.jp/contests/abc168/submissions/13338255
+# WA
+# https://atcoder.jp/contests/abc168/submissions/13355234
 
-# RE: sub1_02, sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16, sub1_21
-# WA: sub1_17, sub1_18
+# WA: sub1_11, sub1_12, sub1_13, sub1_14, sub1_15, sub1_16
 
 n = read_line.to_i64
 
@@ -17,13 +16,17 @@ class Sardine
   getter :taste, :fragrance
   getter gcd : Int64
 
-  def to_a
+  def to_a : Array(Int64)
     [taste, fragrance]
   end
 
-  def basis_vector
+  def basis_vector : Array(Int64)
+    return [0_i64, 0_i64] if to_a.all?(&.zero?)
+    return [0_i64, 1_i64] if to_a.first.zero?
+    return [1_i64, 0_i64] if to_a.last.zero?
+
     a = to_a.map { |i| i // gcd }
-    if a.first < 0
+    if a.first < 0 # [-, +], [-, -] の形のベクトルは [+, -] または [+, +] になるようにする
       a.map { |i| i * -1 }
     else
       a
@@ -42,17 +45,48 @@ class SardineGroup
   property invalid_group : SardineGroup | Nil
   property checked : Bool
 
-  def reset
-    @checked = false
+  def calc(combination_calculator, mod) : Int64
+    sardines_size = size
+
+    if basis_vector == [0_i64, 0_i64]
+      return (size + 1) % mod
+    end
+
+    j = (0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i.to_i64) }.sum % mod).to_i64
+
+    if invalid_group.nil?
+      # puts "sardines_size: #{sardines_size}, j: #{j}"
+      return j % mod
+    end
+
+    invalid_group_instance = invalid_group.as(SardineGroup)
+
+    k = 0_i64.upto(invalid_size).map { |i| combination_calculator.get(invalid_size, i.to_i64) }.sum % mod
+    invalid_checked!
+
+    # puts "j + k - 1: #{j} + #{k} - 1 = #{j + k - 1}"
+
+    (j + k - 1).to_i64 % mod
+  end
+
+  private def size : Int64
+    sardines.size.to_i64
+  end
+
+  private def invalid_size : Int64
+    if invalid_group.nil?
+      0_i64
+    else
+      invalid_group.as(SardineGroup).sardines.size.to_i64
+    end
+  end
+
+  private def invalid_checked!
+    invalid_group.as(SardineGroup).checked = true
   end
 end
 
-sardines = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }
-# sardines.each do |sardine|
-#   puts sardine.inspect
-# end
-
-h = sardines.group_by(&.basis_vector)
+h = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }.group_by(&.basis_vector)
 
 sardine_groups = Hash(Array(Int64), SardineGroup).new
 h.each do |basis_vector, sardines|
@@ -60,7 +94,7 @@ h.each do |basis_vector, sardines|
 end
 
 sardine_groups.each do |basis_vector, sardine_group|
-  basis_vector_inverse = basis_vector[1] < 0 ? [basis_vector[1] * -1, basis_vector[0]] : [basis_vector[1], basis_vector[0] * -1]
+  basis_vector_inverse = basis_vector[1] < 0 ? [basis_vector[1] * -1, basis_vector[0]] : [basis_vector[1], basis_vector[0] * -1] # [+, -] または [+, +] になるようにする
   if sardine_groups.has_key?(basis_vector_inverse)
     # puts "basis_vector: #{basis_vector}, basis_vector_inverse: #{basis_vector_inverse}"
     sardine_groups[basis_vector].invalid_group = sardine_groups[basis_vector_inverse]
@@ -75,37 +109,15 @@ end
 
 mod = 1000000007_i64
 combination_calculator = Combination.generate(n, mod)
-puts count_combination(combination_calculator, sardine_groups, mod) - 1_i64
+i = 1_i64
 
-def count_combination(combination_calculator, sardine_groups, mod)
-  i = 1_i64
-
-  sardine_groups.each do |basis_vector, sardine_group|
-    next if sardine_group.checked == true
-
-    sardines_size = sardine_group.sardines.size.to_i64
-    j = 0_i64.upto(sardines_size).map { |i| combination_calculator.get(sardines_size, i) }.sum % mod
-
-    if sardine_group.invalid_group.nil?
-      # puts "sardines_size: #{sardines_size}, j: #{j}"
-      i *= j
-      i %= mod
-      next
-    end
-
-    invalid_group = sardine_group.invalid_group.as(SardineGroup)
-    invalid_sardines_size = invalid_group.sardines.size.to_i64
-    k = 0_i64.upto(invalid_sardines_size).map { |i| combination_calculator.get(invalid_sardines_size, i) }.sum % mod
-
-    # puts "j + k: #{j} + #{k}"
-    i *= (j + k - 1) % mod
-    i %= mod
-
-    invalid_group.checked = true
-  end
-
-  return i
+sardine_groups.each do |basis_vector, sardine_group|
+  next if sardine_group.checked
+  i *= sardine_group.calc(combination_calculator, mod)
+  i %= mod
 end
+
+puts (i - 1_i64) % mod
 
 # 階乗を扱うクラス
 class Factorial
