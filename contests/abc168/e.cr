@@ -1,10 +1,8 @@
 # ABC 168 E
 # https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
 
-# TLE
-# https://atcoder.jp/contests/abc168/submissions/13473252
-
-# WA: sub1_19, sub1_20
+# AC
+# https://atcoder.jp/contests/abc168/submissions/13487171
 
 require "big"
 
@@ -70,23 +68,12 @@ end
 n = read_line.to_i64
 sardines = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b) }
 
-# filename = read_line
-# file = File.new("contests/abc168/e/in/#{filename}.txt")
-# content = file.gets_to_end.chomp.split(/\n/)
-# file.close
-
-# n = content.shift.to_i64
-# sardines = content.map { |row| a, b = row.split.map(&.to_i64); Sardine.new(a, b) }
-
 # --------
 
 sardines_with_zero_vector, sardines_with_nonzero_vector = sardines.partition(&.zero_vector?)
 
-# puts "sardines_with_zero_vector: #{sardines_with_zero_vector.inspect}"
-# puts "sardines_with_nonzero_vector: #{sardines_with_nonzero_vector.inspect}"
-
 sardine_groups = Hash(
-  (Symbol | BigRational),
+  (Symbol | Array(Int64)),
   Array(Array(Sardine))
 ).new {
   [
@@ -96,7 +83,7 @@ sardine_groups = Hash(
 }
 sardines_with_nonzero_vector.each do |sardine|
   r = sardine.to_rational
-  # puts "r: #{r}"
+
   case r
   when :horizontal
     sarding_group = [
@@ -112,24 +99,25 @@ sardines_with_nonzero_vector.each do |sardine|
     sardine_groups[:on_coordinate] = sarding_group
   else
     rational = r.as(BigRational)
-    # puts "rational: #{rational}"
+    denominator, numerator = rational.denominator.to_i64, rational.numerator.to_i64 # 分母，分子
+
     if rational > 0
+      sardine_group = sardine_groups[[numerator, denominator]]
       sardine_group = [
-        sardine_groups[rational][0].push(sardine),
-        sardine_groups[rational][1]
+        sardine_group[0].push(sardine),
+        sardine_group[1]
       ]
-      sardine_groups[rational] = sardine_group
+      sardine_groups[[numerator, denominator]] = sardine_group
     else
+      sardine_group = sardine_groups[[denominator, - numerator]]
       sardine_group = [
-        sardine_groups[- (rational ** -1)][0],
-        sardine_groups[- (rational ** -1)][1].push(sardine)
+        sardine_group[0],
+        sardine_group[1].push(sardine)
       ]
-      sardine_groups[- (rational ** -1)] = sardine_group
+      sardine_groups[[denominator, - numerator]] = sardine_group
     end
   end
 end
-
-# puts "sardine_groups: #{sardine_groups.inspect}"
 
 mod = 1000000007_i64
 
@@ -137,8 +125,7 @@ def calc_sardine_groups(sardine_group : Array(Array(Sardine)), power_instance : 
   group_plus, group_minus = sardine_group
   j = power_instance.get(group_plus.size.to_i64)
   k = power_instance.get(group_minus.size.to_i64)
-  # j = 2.to_i128 ** group_plus.size.to_i128 % mod
-  # k = 2.to_i128 ** group_minus.size.to_i128 % mod
+
   (j + k - 1_i64) % mod
 end
 
@@ -146,12 +133,12 @@ i = 0_i64
 unless sardine_groups.empty?
   j = 1_i64
   power_instance = ModPower.new(2_i64, mod)
+
   sardine_groups.each do |key, sardine_group|
-    # puts "j: #{j}"
     j *= calc_sardine_groups(sardine_group, power_instance, mod)
     j %= mod
   end
-  # puts "j: #{j}"
+
   i += (j - 1_i64) % mod
 end
 
