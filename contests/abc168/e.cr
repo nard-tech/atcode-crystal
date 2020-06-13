@@ -1,5 +1,5 @@
 # ABC 168 E
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
+#  https://atcoder.jp/contests/abc168/tasks/abc168_e
 
 # AC
 # https://atcoder.jp/contests/abc168/submissions/13487171
@@ -41,7 +41,7 @@ class ModPower
   def initialize(@base : Int64, @mod : Int64 | Nil = nil)
     @h = {
       0_i64 => 1_i64,
-      1_i64 => (mod ? base % mod : base)
+      1_i64 => (mod ? base % mod : base),
     }
   end
 
@@ -72,13 +72,10 @@ sardines = Array.new(n) { a, b = read_line.split.map(&.to_i64); Sardine.new(a, b
 
 sardines_with_zero_vector, sardines_with_nonzero_vector = sardines.partition(&.zero_vector?)
 
-sardine_groups = Hash(
-  (Symbol | Array(Int64)),
-  Array(Array(Sardine))
-).new {
+sardine_groups = Hash((Symbol | Array(Int64)), Array(Array(Sardine))).new {
   [
     [] of Sardine,
-    [] of Sardine
+    [] of Sardine,
   ]
 }
 sardines_with_nonzero_vector.each do |sardine|
@@ -88,13 +85,13 @@ sardines_with_nonzero_vector.each do |sardine|
   when :horizontal
     sarding_group = [
       sardine_groups[:on_coordinate][0].push(sardine),
-      sardine_groups[:on_coordinate][1]
+      sardine_groups[:on_coordinate][1],
     ]
     sardine_groups[:on_coordinate] = sarding_group
   when :vertical
     sarding_group = [
       sardine_groups[:on_coordinate][0],
-      sardine_groups[:on_coordinate][1].push(sardine)
+      sardine_groups[:on_coordinate][1].push(sardine),
     ]
     sardine_groups[:on_coordinate] = sarding_group
   else
@@ -105,16 +102,16 @@ sardines_with_nonzero_vector.each do |sardine|
       sardine_group = sardine_groups[[numerator, denominator]]
       sardine_group = [
         sardine_group[0].push(sardine),
-        sardine_group[1]
+        sardine_group[1],
       ]
       sardine_groups[[numerator, denominator]] = sardine_group
     else
-      sardine_group = sardine_groups[[denominator, - numerator]]
+      sardine_group = sardine_groups[[denominator, -numerator]]
       sardine_group = [
         sardine_group[0],
-        sardine_group[1].push(sardine)
+        sardine_group[1].push(sardine),
       ]
-      sardine_groups[[denominator, - numerator]] = sardine_group
+      sardine_groups[[denominator, -numerator]] = sardine_group
     end
   end
 end

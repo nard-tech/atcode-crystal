@@ -1,5 +1,5 @@
 # ABC 168 C - : (Colon)
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_c
+#  https://atcoder.jp/contests/abc168/tasks/abc168_c
 
 # AC
 # https://atcoder.jp/contests/abc168/submissions/13302924

@@ -1,2 +1,2 @@
 # ABC 167 F - Bracket Sequencing
-# https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_f
+#  https://atcoder.jp/contests/abc167/tasks/abc167_f

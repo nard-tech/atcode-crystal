@@ -1,5 +1,5 @@
 # ABC 167 B
-# https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_b
+#  https://atcoder.jp/contests/abc167/tasks/abc167_b
 
 # AC
 # https://atcoder.jp/contests/abc167/submissions/13049285

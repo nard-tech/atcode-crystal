@@ -1,5 +1,5 @@
 # ABC 168 A - ∴ (Therefore)
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_a
+#  https://atcoder.jp/contests/abc168/tasks/abc168_a
 
 # AC
 # https://atcoder.jp/contests/abc168/submissions/13289577
