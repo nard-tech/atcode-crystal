@@ -1,5 +1,5 @@
 # ABC 168 E - ∙ (Bullet)
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_e
+#  https://atcoder.jp/contests/abc168/tasks/abc168_e
 
 # TLE
 # https://atcoder.jp/contests/abc168/submissions/13471768

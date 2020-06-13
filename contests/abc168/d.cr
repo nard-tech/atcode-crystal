@@ -1,5 +1,5 @@
 # ABC 168 D - .. (Double Dots)
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_d
+#  https://atcoder.jp/contests/abc168/tasks/abc168_d
 
 n, m = read_line.split.map(&.to_i64)
 ab_s = Array.new(m) { a, b = read_line.split.map(&.to_i64).sort }

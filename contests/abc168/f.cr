@@ -1,2 +1,2 @@
 # ABC 168 F - . (Single Dot)
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_f
+#  https://atcoder.jp/contests/abc168/tasks/abc168_f

@@ -1,5 +1,5 @@
 # ABC 168 B - ... (Triple Dots)
-# https://atcoder.jp/contests/contests/abc168/tasks/contests/abc168_b
+#  https://atcoder.jp/contests/abc168/tasks/abc168_b
 
 # AC
 # https://atcoder.jp/contests/abc168/submissions/13291339
