@@ -1,5 +1,5 @@
 # ABC 167 C - Skill Up
-# https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_c
+#  https://atcoder.jp/contests/abc167/tasks/abc167_c
 
 n, m, x = read_line.split.map(&.to_i64)
 

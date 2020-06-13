@@ -1,5 +1,5 @@
 # ABC 167 D - Teleporter
-# https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_d
+#  https://atcoder.jp/contests/abc167/tasks/abc167_d
 
 # AC
 # https://atcoder.jp/contests/abc167/submissions/13072697

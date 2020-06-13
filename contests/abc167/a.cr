@@ -1,5 +1,5 @@
 # ABC 167 A - Registration
-# https://atcoder.jp/contests/contests/abc167/tasks/contests/abc167_a
+#  https://atcoder.jp/contests/abc167/tasks/abc167_a
 
 # AC
 # https://atcoder.jp/contests/abc167/submissions/13022321
