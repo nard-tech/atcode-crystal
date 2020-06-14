@@ -2,7 +2,7 @@
 # https://atcoder.jp/contests/tokiomarine2020/tasks/tokiomarine2020_c
 
 # TLE
-# https://atcoder.jp/contests/tokiomarine2020/submissions/14241113
+# https://atcoder.jp/contests/tokiomarine2020/submissions/14242182
 
 n, k = read_line.split.map(&.to_i64)
 a = read_line.split.map(&.to_i64)
@@ -17,7 +17,7 @@ class Lamp
   def for?(point)
     # @position - @power - 0.5 <= point <= @position + @power + 0.5
     # @position - (@power + 0.5) <= point <= @position + (@power + 0.5)
-    (@position - point).abs <= @power + 0.5
+    (@position - point).abs <= @power
   end
 end
 
